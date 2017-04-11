@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import dicom
 import pylab
 
