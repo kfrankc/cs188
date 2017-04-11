@@ -7,12 +7,12 @@
     <!-- og tags -->
     <meta property="og:url" content="http://www.kfrankc.me/cs188" />
     <meta property="og:title" content="CS 188: Medical Imaging" />
-    <meta property="og:description" content="" />
-    <meta property="og:image" content="img/brain.png" />
+    <meta property="og:description" content="Website for CS 188 Project" />
+    <meta property="og:image" content="http://www.kfrankc.me/cs188/img/brain.png" />
     <meta property="og:image:width" content="322" />
     <meta property="og:image:height" content="325" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="">
+    <meta name="description" content="Website for CS 188 Project">
     <meta name="author" content="Frank Chen">
     <!--css-->
     <link rel="stylesheet" href="css/style.css">
@@ -42,7 +42,7 @@
 	<header>
 		<nav>
 			<ul>
-				<li><a href="http://kfrankc.me"> Home</a></li>
+				<li><a href="index.html"> Home</a></li>
 			</ul>
 		</nav>
 	<h2><a href="index.html"><b>CS 188: Medical Imaging</b></a></h2>
@@ -53,9 +53,32 @@
 				<img data-src="img/brain.png">
 			</div>
       <p><b>Authors</b>: Frank Chen, Arvin Nguyen</p>
-      <p><b>Motivation</b>: Potentially combining the visualization of flow + streamline in the brain and Diffusion Tensor Tracking (DTI) in stroke.</p>
+      <p><b>Motivation</b>: Visualizing flow lines in blood vessels by constructing animated vector fields.</p>
       <!-- Sample Papers -->
-			<p><b>Sample Papers:</b></p>
+			<p><b>Sample Papers Analysis:</b></p>
+      <p><a href="https://www.ncbi.nlm.nih.gov/pubmed/28167407">Efficient blood flow visualization using flowline extraction and opacity modulation based on vascular structure analysis.</a></p>
+      <p>"The vessel inlet or outlet is first identified using the <b>orthogonality metric</b> between the <b>normal vectors</b> of the flow velocity and <b>vessel surface</b>. Then, seed points are generated on the identified inlet or outlet by Poisson disk sampling. Therefore, it is possible to achieve the automatic seeding that leads to a consistent and faster flow depiction by skipping the manual location of a seeding plane for the initiation of the line integration."</p>
+      <p>Three issues of visualization of blood flow in vascular structures:</p>
+      <ul>
+        <li> <b>Seeding</b> - decision of the starting positions for the initiation of the line integration.
+        <li> <b>Tracing</b> - construction of integral lines through a commncement that occurs at seed points and the consecutive searching for trajectory points.
+        <li> <b>Rendering</b> - 
+      </ul>
+      <p>Proposed Method has 4 processing steps:</p>
+      <ul>
+        <li> <b>Preprocessing</b> - surface mesh extracted from volume mesh
+        <li> <b>Seeding</b> - vessel inlet or outlet that the seed points are placed on are detected. We want to identify all of the surface vertices as the inlet or outlet vertices and the awll vertices by using the orthogonality metric betwen these vectors, as follows: 
+        $$C_i =
+          \begin{cases}
+            \text{inlet or outlet}, & \text{if}\ \left|\frac{V_i}{|V_i|} \cdot N_i\right| > 0 \\
+            \text{wall}, & \text{otherwise}
+          \end{cases}$$
+        where $V_i$ and $N_i$ denote the velocity vector and the outward normal vector at the i-th vertice of the surface mesh, respectively. In order to place seed points on the plane that is estimated from the inlet or outlet vertices, Poisson disk sampling is used.
+        <li> <b>Tracing</b> - line integration is performed to construct flowlines from the vector field
+        <li> <b>Rendering</b> - color is assigned to the flowline segments according to a color mapping
+      </ul>
+      <br>
+      <p><b>More Sample Papers: </b></p>
       <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3594764/">A hitchhiker's guide to diffusion tensor imaging</a></p>
       <p><a href="http://vis.cs.brown.edu/docs/pdf/Bihan-2001-DTI.pdf">Diffusion Tensor Imaging: Concepts and Applications</a></p>
       <p><a href="https://www.researchgate.net/profile/Benson_Mwangi3/publication/235947851_Prediction_of_individual_subject's_age_across_the_human_lifespan_using_diffusion_tensor_imaging_A_machine_learning_approach/links/53eebe6f0cf23733e812bf81.pdf">Prediction of individual subject's age across the human lifespan using diffusion tensor imaging: A machine learning approach</a></p>
@@ -64,6 +87,7 @@
       <!-- Sample Datasets -->
       <p><b>Sample Datasets:</b></p>
       <p><a href=""></a></p>
+      <a href="dicom.html"><p><b>What are dicom files?</b></p></a>
 		</section>
 	</div>
   <script src="js/imageloader.js"></script>
