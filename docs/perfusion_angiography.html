@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>CS 188: Medical Imaging</title>
+  	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- og tags -->
+    <meta property="og:url" content="http://www.kfrankc.me/cs188" />
+    <meta property="og:title" content="CS 188: Medical Imaging" />
+    <meta property="og:description" content="Website for CS 188 Project" />
+    <meta property="og:image" content="http://www.kfrankc.me/cs188/img/brain.png" />
+    <meta property="og:image:width" content="322" />
+    <meta property="og:image:height" content="325" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Website for CS 188 Project">
+    <meta name="author" content="Frank Chen">
+    <!--css-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <!--js-->
+    <script src="js/wow.min.js"></script>
+    <script src="js/medium-zoom.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+	  <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+	  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <!-- responsive icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body>
+  	<script> new WOW().init(); </script>
+	<header>
+		<nav>
+			<ul>
+				<li><a href="index.html"> Home</a></li>
+			</ul>
+		</nav>
+	<h2><a href="index.html"><b>CS 188: Medical Imaging</b></a></h2>
+	</header>
+	<div class="wow fadeIn" data-wow-delay="1s">
+		<section>
+			<div class="fill">
+				<img data-src="img/brain.png">
+			</div>
+      <p><b>Authors</b>: Frank Chen, Arvin Nguyen</p>
+      <h2><a href="https://www.ncbi.nlm.nih.gov/pubmed/28167407"><b>Perfusion Angiography in Acute Ischemic Stroke</b></a></h2>
+      <!-- Sample Papers -->
+			<p><b>Papers Analysis:</b></p>
+      <p><b>Digital Subtraction Angiography (DSA)</b> is the gold standard for rapid imaging.</p>
+      <p>The parameters, including cerebral blood flow (CBF) and cerebral blood volume (CBV), mean transit time (MTT), time-to-peak (TTP), and $T_{max}$, are computed using a bolus tracking method based on the deconvolution of the time-density curve on a pixel-by-pixel basis</p>
+      <p><b>What is Angiography?</b> It is a technique that relies on X-ray imaging of iodinated radioopaque contrast agent previously injected into the blood stream, "The popularity of DSA can be attributed to its good spatiotemporal resolution which is not easily matched by other acquisition techniques such as magnetic resonance imaging (MRI) and computed tomography (CT)."</p>
+    </section>
+    <section>
+      <h3><b>2.3</b></h3>
+      <p>Section 2.3 discusses <b>Video Densitometric Theory</b>. It can be estimated through DSA as the intensity observed in the image is proportional to the contrast concentration. Given by the equation 
+      $$I(t)_{(x,y)} = k\mu C(t)_{(x,y)}\rho_{(x,y)}$$
+      where: 
+      <ul>
+        <li> $I(t)_{(x,y)}$ is the DSA image intensity value for a given pixel $(x,y)$ at time $t$
+        <li> $\mu$ is the mass attenuation coefficient of the contrast agent which is proportional to the X-ray energy
+        <li> $\rho_{(x,y)}$ is the thickness of the vessel
+        <li> $C(x,y)$ is the contrast concentration
+        <li> $k$ is a constant that accounts for the X-ray imaging system acquisition and amplification
+      </ul>
+      </p>
+      <p>We can compute the vessel thickness $\rho_{(x,y)}$ by doing the following:
+      <ul>
+        <li> Apply a <b>vessel detector</b> based on vesselness filtering and thresholding. 
+        <li> Centerlines are then obtained via <b>skeletization</b>. 
+        <li> Finally, a perpendicular segment (computed along each point of the centerline) is used to measure the distance to the edges of the vessel and derive the thickness assuming cylindrical volume. 
+        <li>The thickness is then applied on a cross-sectional basis to every point within the vessel using <b>bicubic interpolation</b>.
+      </ul>
+      </p>
+    </section>
+    <section>
+      <h3><b>2.4</b></h3>
+      <p>Section 2.4 discusses Perfusion Parameters from DSA using Bolus Tracking. First, to calculate Cerebral Blood Volume (CBV), we use the following equation:
+      $$CBV = \frac{\int_{t=0}^{\infty}C_u(t)dt}{\int_{t=0}^{\infty}C_a(t)dt}$$
+      Where $u$ is any location in the image, $C_u$ is the amount of contrast agent that has passed through $u$ with respect to the total amount of contrast measured at the feeding arterial vessel $C_a$</p>
+      <p>The temporal relationship between $C_a$ and and $C_u$ is $$C_u(t) = C_a(t) \otimes h(t)$$ where $\otimes$ is the symbol for the convolution and $h$ is the distribution of the transit times, which is related to the fraction of injected contrast agent still present in the vasculature at any given time $t$. We define the residue function $R(t)$ as $$R(t) = 1 - \int_{\tau = 0}^{t} h(\tau)d\tau$$ We can obtain a more rigorous relationship between $C_u$ and $C_a$ as: $$C_u(t) = CBF(C_a \otimes R) (t)$$ where CBF is <b>Cerebral Blood Flow</b>. $C_a$ and $C_u$ can be estimated from DSA, but $R$ and $CBF$ will need more complex computations.</p>
+      <p>We can sample $C_u$ and $C_a$ at discrete time points $t_j \in [0, N-1]$: $$C_u(t_j) = 
+      \Delta CBF \sum^{N-1}_{i=0}C_a(t_i)R(t_j - t_i)$$ We can actually rewrite this as a matrix-vector notation: $$C_u = \Delta t CBFC_AR$$ where 
+      <ul>
+        <li> $C_u, R \in \mathbb{R}^N$
+        <li> $C_A$ is expanded to a <a href="https://www.wikiwand.com/en/Toeplitz_matrix">Toeplitz matrix</a>.
+      </ul></p>
+      <p>Now, we want to recover $R$. We can perform SVD on $C_A$: $C_A = UWV^T$. From here, we can find the solution $$R = V\widehat{W}^{-1}U^TC_u$$ We can extract the parameters ($CBF$, $CBV$, $MTT$, $TTP$, and $T_{max}$), see figure below.</p>
+      <div class="figure">
+        <img id="zoom-margin" data-src="img/perfusion_angiography_fig1.png">
+      </div>
+      <br>
+    </section>
+    <section>
+      <h3><b>2.5</b></h3>
+      <p>A challenging aspect of the estimation of perfusion parameters is when there is overlap of the vessels (see figure below). We can solve this problem by representing the concentration over time with a Gamma-mixture distribution that is created by using an EM algorithm.</p>
+      <div class="figure">
+        <img id="zoom-margin" data-src="img/perfusion_angiography_fig2.png">
+      </div>
+      <h4><b>2.5.1</b> Gamma-Variate Fitting</h4>
+      <p>The density function $\gamma_{\alpha, \beta}$ can be written as: 
+      $$ \gamma_{\alpha, \beta} (x) = \begin{cases}
+              \frac{\beta^{\alpha}}{\Gamma(\alpha)}\text{exp}^{-(x-\mu)\beta}(x-\mu)^{\alpha - 1}, & \text{if}\ x - \mu \ge \Delta_{min} \\
+              0, & \text{otherwise}
+            \end{cases}
+      $$ where $\alpha$, $\beta$, and $\mu$ are the shape, scale, and location parameters. We define the Gamma function $\Gamma(\alpha)$ as $$\Gamma(\alpha) = \int_0^{\infty}t^{\alpha-1} \text{exp}^{-t}dt$$ We like the Gamma distribution because of it can accomodate different concentration-time curves.
+      </p>
+      <h4><b>2.5.2</b> Mixture of Gamma-Variate Distribution</h4>
+      <p>Our mixture equation is defined as the following: $$\mathscr{M}(x, \Theta) = \sum^K_{j=1}\tau_j \gamma_{\alpha_j, \beta_j} (x)$$</p>
+    </section>
+    <section>
+      <a href="index.html"><b>Back to Home</b></a>
+		</section>
+	</div>
+  <script src="js/imageloader.js"></script>
+  <script>
+  window.addEventListener('load', function () {
+    // Add zooms to a container
+    const containerZoom = [
+      mediumZoom('#zoom-margin', {
+        margin: 48
+      }),
+    ]
+    // Write in the journal an image is zoomed
+    const journal = document.querySelector('#journal')
+    containerZoom.forEach(function (zoom) {
+      zoom.addEventListeners('show', function (event) {
+        const time = (new Date()).toLocaleTimeString()
+        journal.innerHTML += `<p>❯ "${event.target.alt}" was zoomed at ${time}`
+      })
+      zoom.addEventListeners('detach', function (event) {
+        const time = (new Date()).toLocaleTimeString()
+        journal.innerHTML += `<p>❯ "${event.target.alt}" was detached at ${time}`
+      })
+    })
+  })
+</script>
+  </body>
+</html>

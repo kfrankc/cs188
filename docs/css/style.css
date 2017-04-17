@@ -86,12 +86,25 @@ img[data-src] {
     padding-bottom: 10px;
 }
 
+.figure {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.figure img {
+    flex-shrink:0;
+    min-width:100%;
+    max-height:200px;
+}
+
 .fill {
     display:flex;
     justify-content:center;
     align-items:center;
     overflow:hidden
 }
+
 .fill img {
     flex-shrink:0;
     min-width:100%;
