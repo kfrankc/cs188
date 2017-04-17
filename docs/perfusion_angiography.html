@@ -47,7 +47,7 @@
 		</nav>
 	<h2><a href="index.html"><b>CS 188: Medical Imaging</b></a></h2>
 	</header>
-	<div class="wow fadeIn" data-wow-delay="1s">
+	<div class="wow fadeIn" data-wow-delay="0.5s">
 		<section>
 			<div class="fill">
 				<img data-src="img/brain.png">
@@ -60,6 +60,8 @@
       <p>The parameters, including cerebral blood flow (CBF) and cerebral blood volume (CBV), mean transit time (MTT), time-to-peak (TTP), and $T_{max}$, are computed using a bolus tracking method based on the deconvolution of the time-density curve on a pixel-by-pixel basis</p>
       <p><b>What is Angiography?</b> It is a technique that relies on X-ray imaging of iodinated radioopaque contrast agent previously injected into the blood stream, "The popularity of DSA can be attributed to its good spatiotemporal resolution which is not easily matched by other acquisition techniques such as magnetic resonance imaging (MRI) and computed tomography (CT)."</p>
     </section>
+  </div>
+  <div class="wow fadeIn" data-wow-delay="0.5s">
     <section>
       <h3><b>2.3</b></h3>
       <p>Section 2.3 discusses <b>Video Densitometric Theory</b>. It can be estimated through DSA as the intensity observed in the image is proportional to the contrast concentration. Given by the equation 
@@ -82,6 +84,8 @@
       </ul>
       </p>
     </section>
+  </div>
+  <div class="wow fadeIn" data-wow-delay="0.5s">
     <section>
       <h3><b>2.4</b></h3>
       <p>Section 2.4 discusses Perfusion Parameters from DSA using Bolus Tracking. First, to calculate Cerebral Blood Volume (CBV), we use the following equation:
@@ -100,6 +104,8 @@
       </div>
       <br>
     </section>
+  </div>
+  <div class="wow fadeIn" data-wow-delay="0.5s">
     <section>
       <h3><b>2.5</b></h3>
       <p>A challenging aspect of the estimation of perfusion parameters is when there is overlap of the vessels (see figure below). We can solve this problem by representing the concentration over time with a Gamma-mixture distribution that is created by using an EM algorithm.</p>
@@ -115,34 +121,26 @@
       $$ where $\alpha$, $\beta$, and $\mu$ are the shape, scale, and location parameters. We define the Gamma function $\Gamma(\alpha)$ as $$\Gamma(\alpha) = \int_0^{\infty}t^{\alpha-1} \text{exp}^{-t}dt$$ We like the Gamma distribution because of it can accomodate different concentration-time curves.
       </p>
       <h4><b>2.5.2</b> Mixture of Gamma-Variate Distribution</h4>
-      <p>Our mixture equation is defined as the following: $$\mathscr{M}(x, \Theta) = \sum^K_{j=1}\tau_j \gamma_{\alpha_j, \beta_j} (x)$$</p>
+      <p>Our mixture equation is defined as the following: $$\mathscr{M}(x, \Theta) = \sum^K_{j=1}\tau_j \gamma_{\alpha_j, \beta_j} (x)$$ where $\gamma_{\alpha_j, \beta_j}(x)$ is the Gamma-variate distribution of the $j^{th}$ component.</p>
+      <h4><b>2.5.3</b> Parameter Estimation</h4>
+      <p>We use good-old MLE to estimate our parameter $\Theta$. Our log-likelihood is: $$\mathscr{L}(\Theta) = \sum^N_{i=0}\text{log}\mathscr{M}(x_i, \Theta)$$ and we use Expectation-Maximization (EM) algorithm to estimate our param.</p>
     </section>
+  </div>
+  <div class="wow fadeIn" data-wow-delay="0.5s">
     <section>
       <a href="index.html"><b>Back to Home</b></a>
 		</section>
 	</div>
   <script src="js/imageloader.js"></script>
   <script>
-  window.addEventListener('load', function () {
-    // Add zooms to a container
-    const containerZoom = [
-      mediumZoom('#zoom-margin', {
-        margin: 48
-      }),
-    ]
-    // Write in the journal an image is zoomed
-    const journal = document.querySelector('#journal')
-    containerZoom.forEach(function (zoom) {
-      zoom.addEventListeners('show', function (event) {
-        const time = (new Date()).toLocaleTimeString()
-        journal.innerHTML += `<p>❯ "${event.target.alt}" was zoomed at ${time}`
-      })
-      zoom.addEventListeners('detach', function (event) {
-        const time = (new Date()).toLocaleTimeString()
-        journal.innerHTML += `<p>❯ "${event.target.alt}" was detached at ${time}`
-      })
+    window.addEventListener('load', function () {
+      // Add zooms to a container
+      const containerZoom = [
+        mediumZoom('#zoom-margin', {
+          margin: 48
+        }),
+      ]
     })
-  })
-</script>
+  </script>
   </body>
 </html>
