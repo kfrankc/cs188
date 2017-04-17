@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>CS 188: Medical Imaging</title>
+  	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- og tags -->
+    <meta property="og:url" content="http://www.kfrankc.me/cs188" />
+    <meta property="og:title" content="CS 188: Medical Imaging" />
+    <meta property="og:description" content="Website for CS 188 Project" />
+    <meta property="og:image" content="http://www.kfrankc.me/cs188/img/brain.png" />
+    <meta property="og:image:width" content="322" />
+    <meta property="og:image:height" content="325" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Website for CS 188 Project">
+    <meta name="author" content="Frank Chen">
+    <!--css-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <!--js-->
+    <script src="js/wow.min.js"></script>
+    <script src="js/plotter.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+	  <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+	  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <!-- responsive icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body>
+  	<script> new WOW().init(); </script>
+	<header>
+		<nav>
+			<ul>
+				<li><a href="index.html"> Home</a></li>
+			</ul>
+		</nav>
+	<h2><a href="index.html"><b>CS 188: Medical Imaging</b></a></h2>
+	</header>
+	<div class="wow fadeIn" data-wow-delay="1s">
+		<section>
+			<div class="fill">
+				<img data-src="img/brain.png">
+			</div>
+      <p><b>Authors</b>: Frank Chen, Arvin Nguyen</p>
+      <h2><a href="https://www.ncbi.nlm.nih.gov/pubmed/28167407"><b>Visualizing flow lines by constructing animated vector fields</b></a></h2>
+      <!-- Sample Papers -->
+			<p><b>Papers Analysis:</b></p>
+      <p>"The vessel inlet or outlet is first identified using the <b>orthogonality metric</b> between the <b>normal vectors</b> of the flow velocity and <b>vessel surface</b>. Then, seed points are generated on the identified inlet or outlet by Poisson disk sampling. Therefore, it is possible to achieve the automatic seeding that leads to a consistent and faster flow depiction by skipping the manual location of a seeding plane for the initiation of the line integration."</p>
+      <p>Three issues of visualization of blood flow in vascular structures:</p>
+      <ul>
+        <li> <b>Seeding</b> - decision of the starting positions for the initiation of the line integration.
+        <li> <b>Tracing</b> - construction of integral lines through a commncement that occurs at seed points and the consecutive searching for trajectory points.
+        <li> <b>Rendering</b> - 
+      </ul>
+      <p>Proposed Method has 4 processing steps:</p>
+      <ul>
+        <li> <b>Preprocessing</b> - surface mesh extracted from volume mesh
+        <li> <b>Seeding</b> - vessel inlet or outlet that the seed points are placed on are detected. We want to identify all of the surface vertices as the inlet or outlet vertices and the awll vertices by using the orthogonality metric betwen these vectors, as follows: 
+        $$C_i =
+          \begin{cases}
+            \text{inlet or outlet}, & \text{if}\ \left|\frac{V_i}{|V_i|} \cdot N_i\right| > 0 \\
+            \text{wall}, & \text{otherwise}
+          \end{cases}$$
+        where $V_i$ and $N_i$ denote the velocity vector and the outward normal vector at the i-th vertice of the surface mesh, respectively. In order to place seed points on the plane that is estimated from the inlet or outlet vertices, Poisson disk sampling is used.
+        <li> <b>Tracing</b> - line integration is performed to construct flowlines from the vector field. The position of the next point is calculated via numerical integration. This procedure is repeated until the flowline reaches a physical boundary, or until the number of steps reach a defined limit. <b>This process is applied to all seed points, so we get one flowline per point.</b>
+        <ul>
+          <li> Flow-based bidirectional tracing - The flow direction $F_i$ at the $i$-th seed point is defined as the following:
+          $$F_i = 
+            \begin{cases}
+              \text{inflow}, & \text{if}\ V_i \cdot N_i < 0 \\
+              \text{outflow}, & \text{otherwise}
+            \end{cases}$$
+          where $V_i$ and $N_i$ denote the velocity vector and the outward normal vector, respectively.
+        </ul>
+        <li> <b>Rendering</b> - color is assigned to the flowline segments according to a color mapping
+      </ul>
+      <br>
+      <a href="index.html"><b>Back to Home</b></a>
+		</section>
+	</div>
+  <script src="js/imageloader.js"></script>
+  </body>
+</html>
