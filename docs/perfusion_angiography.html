@@ -124,6 +124,8 @@
       <p>Our mixture equation is defined as the following: $$\mathscr{M}(x, \Theta) = \sum^K_{j=1}\tau_j \gamma_{\alpha_j, \beta_j} (x)$$ where $\gamma_{\alpha_j, \beta_j}(x)$ is the Gamma-variate distribution of the $j^{th}$ component.</p>
       <h4><b>2.5.3</b> Parameter Estimation</h4>
       <p>We use good-old MLE to estimate our parameter $\Theta$. Our log-likelihood is: $$\mathscr{L}(\Theta) = \sum^N_{i=0}\text{log}\mathscr{M}(x_i, \Theta)$$ and we use Expectation-Maximization (EM) algorithm to estimate our param.</p>
+      <p><b>Expectation Step</b>:  We calculate expected value $Q(\Theta, \Theta^m)$ of the log-likelihood given current parameteres $\Theta^m$ and $$Q(\Theta, \Theta^m) = \sum^N_{i=1}\sum^K_{j=1} z_{ij}^m \text{log} (\tau_j) + C$$ where $$z_{ij}^m = \frac{\tau_{j}^m \gamma_j(x_i\alpha_j^m, \beta_j^m)}{\mathscr{M}(x_i, \Theta^m)}$$</p>
+      <p><b>Maximization Step</b>: We maximize $Q(\Theta, \Theta^m)$ w.r.t. $\Theta$ using numerical optimization (Newton's Method, Gradient Descent). $$\Theta^{m+1} = \mathop{\arg\,\max}\limits_{\Theta} Q(\Theta, \Theta^m)$$ We execute this iterative procedure until the convergence criterion $| \Theta^{m+1} - \Theta^m | < \tau_{EM}$ is satisfied.</p>
     </section>
   </div>
   <div class="wow fadeIn" data-wow-delay="0.5s">
