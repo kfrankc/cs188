@@ -1,0 +1,16 @@
+version: '2'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cs188-web
+    working_dir: /home/docker-dev
+    command: npm start --prefix /home/docker-dev/web
+    volumes:
+      - .:/home/docker-dev
+    environment:
+      - PORT=3000
+      - DEBUG=web:*
+    ports:
+      - "3000:3000"

@@ -1,0 +1,11 @@
+.git
+.gitignore
+.node_repl_history
+.bash_history
+.config
+
+**/*.swp
+
+
+docs
+web/node_modules

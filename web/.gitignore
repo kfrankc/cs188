@@ -28,3 +28,7 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
+
+.bash_history
+.config/
+.node_repl_history
