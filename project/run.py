@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+from __future__ import print_function
+import sys
 
 import dicom
 # import cv2
@@ -15,7 +17,14 @@ from skimage.filters.rank import median
 from skimage.morphology import disk
 from skimage.morphology import skeletonize
 
-ds = dicom.read_file("2d_angiogram.dcm")
+if (len(sys.argv)) < 3:
+    print("Missing argument")
+    print("Usage: {} <path_to_dicom> <output_directory>".format(sys.argv[0]))
+    exit(1)
+dicom_file = sys.argv[1]
+output_dir = sys.argv[2]
+
+ds = dicom.read_file(dicom_file)
 i = 1
 for frame in ds.pixel_array:
 
@@ -32,7 +41,7 @@ for frame in ds.pixel_array:
 	img_gray = rgb2gray(frame)
 	# Reference: http://scikit-image.org/docs/dev/auto_examples/xx_applications/plot_thresholding.html
 	thresh = threshold_mean(img_gray) - 100
-	print thresh
+	print(thresh)
 	binary = img_gray > thresh
 	binary_invert = util.invert(binary)
 
@@ -47,7 +56,7 @@ for frame in ds.pixel_array:
 	# Display
 	# Save; note: convert -delay 20 -loop 0 *png skeleton.gif converts to gif
 	fig = plt.gcf()
-	fig.savefig('./img/' + str(i) + '.png')
+	fig.savefig(output_dir + '/' + str(i) + '.png'
 	plt.imshow(skeleton, cmap=plt.cm.bone)
 	plt.pause(.1)
 	plt.draw()
