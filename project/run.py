@@ -56,7 +56,7 @@ for frame in ds.pixel_array:
 	# Display
 	# Save; note: convert -delay 20 -loop 0 *png skeleton.gif converts to gif
 	fig = plt.gcf()
-	fig.savefig(output_dir + '/' + str(i) + '.png'
+	fig.savefig(output_dir + '/' + str(i) + '.png')
 	plt.imshow(skeleton, cmap=plt.cm.bone)
 	plt.pause(.1)
 	plt.draw()

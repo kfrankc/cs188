@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const serveIndex = require('serve-index')
 
 var app = express();
 
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 app.use('/upload', require('./routes/upload'));
 app.use('/users', require('./routes/users'));
+app.use('/pub', serveIndex('../project/', {'icons': true}))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
