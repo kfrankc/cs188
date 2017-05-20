@@ -5,10 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile
     image: cs188-web
-    working_dir: /home/docker-dev
-    command: npm start --prefix /home/docker-dev/web
+    working_dir: /home/docker-dev/web
+    command: npm start
     volumes:
       - .:/home/docker-dev
+      - /home/docker-dev/web/node_modules
     environment:
       - PORT=3000
       - DEBUG=web:*
