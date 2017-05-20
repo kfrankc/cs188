@@ -3,7 +3,9 @@
 import dicom
 # import cv2
 import numpy as np
-from matplotlib import pyplot as plt
+import matplotlib
+matplotlib.use('Agg')       # See: http://stackoverflow.com/questions/4931376/generating-matplotlib-graphs-without-a-running-x-server
+import matplotlib.pyplot as plt
 # from PIL import Image
 
 from skimage.color import rgb2gray
