@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 app.use('/upload', require('./routes/upload'));
 app.use('/users', require('./routes/users'));
-app.use('/pub', serveIndex('../project/', {'icons': true}))
+app.use('/pub', serveIndex('./public/', {'icons': true}))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -4,8 +4,6 @@ const spawn = require('child_process').spawn;
 
 /* /upload */
 router.post('/', (req, res, next) => {
-  console.log('\n\n------------------------');
-  console.log(req);
   res.json({
     'success': true,
     'data': 12345
