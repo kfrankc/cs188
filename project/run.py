@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-import dicom
+# import dicom
+import mudicom
 # import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -12,10 +13,19 @@ from skimage import util
 from skimage.filters.rank import median
 from skimage.morphology import disk
 from skimage.morphology import skeletonize
+from skimage.morphology import binary_dilation
+from skimage.morphology import binary_erosion
+from skimage.morphology import binary_closing
 
-ds = dicom.read_file("2d_angiogram.dcm")
+from skimage.transform import probabilistic_hough_line
+
+# ds = dicom.read_file("2d_angiogram_2.dcm")
+mu = mudicom.load("2d_angiogram_1.dcm")
+mu_out = mu.image
+pixel_array = mu_out.numpy
 i = 1
-for frame in ds.pixel_array:
+fig2, ax = plt.subplots(2, 2, figsize=(10, 8))
+for frame in pixel_array:
 
 	# OUTDATED - kept for future reference
 	# kernel = np.ones((25, 25), np.float32)/25
@@ -35,18 +45,42 @@ for frame in ds.pixel_array:
 	binary_invert = util.invert(binary)
 
 	# median filter
-	med = median(binary_invert, disk(5))
+	med = median(binary_invert, disk(10))
 
 	# skeletonize
 	med[med == 255] = 1
 	skeleton = skeletonize(med)
-	final_img = skeleton
 
-	# Display
-	# Save; note: convert -delay 20 -loop 0 *png skeleton.gif converts to gif
-	fig = plt.gcf()
-	fig.savefig('./img/' + str(i) + '.png')
-	plt.imshow(skeleton, cmap=plt.cm.bone)
+	kernel = np.ones((20,20), np.uint8)  # note this is a HORIZONTAL kernel
+	dilate = binary_dilation(skeleton, kernel)
+	erode = binary_erosion(dilate, kernel) 
+
+	closed = binary_closing(erode)
+	skel = skeletonize(closed)
+	final_img = skel
+
+	# # Display
+	# # Save; note: convert -delay 20 -loop 0 *png skeleton.gif converts to gif
+	# fig = plt.gcf()
+	# plt.axis('off')
+	# plt.imshow(final_img, cmap=plt.cm.bone, bbox_inches=0)
+	# # fig.savefig('./img/' + str(i) + '.png')
+	# plt.pause(.1)
+	# plt.draw()
+
+	ax[0,0].imshow(frame, cmap=plt.cm.bone)
+	ax[0,0].set_title('Input image')
+	ax[0,0].axis('image')
+	ax[0,1].imshow(dilate, cmap=plt.cm.bone)
+	ax[0,1].set_title('Dilation')
+	ax[0,1].axis('image')
+	ax[1,0].imshow(closed, cmap=plt.cm.bone)
+	ax[1,0].set_title('Closing')
+	ax[1,0].axis('image')
+	ax[1,1].imshow(final_img, cmap=plt.cm.bone)
+	ax[1,1].set_title('Final Image')
+	ax[1,1].axis('image')
+	# fig2.savefig('./img/' + str(i) + '.png')
 	plt.pause(.1)
 	plt.draw()
 	i = i + 1
