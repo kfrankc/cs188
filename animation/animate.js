@@ -44,6 +44,18 @@ const NUM_PARTICLES = 10;
 let prev = null;
 const particles = [];
 
+const colors = [
+  [255,255,0],
+  [255,226,0],
+  [255,198,0],
+  [255,170,0],
+  [255,141,0],
+  [255,113,0],
+  [255,85,0],
+  [255,56,0],
+  [255,28,0],
+  [255,0,0],
+]
 
 if (canvas.getContext) {
   ctx = canvas.getContext('2d');
@@ -82,6 +94,11 @@ class Particle {
     this.y = Math.floor(Math.random() * CANVAS_WIDTH);
     this.age = Math.floor(Math.random() * MAX_PARTICLE_AGE);
   }
+
+  moveTo(newX, newY) {
+    this.x = newX;
+    this.y = newY;
+  }
 }
 
 
@@ -112,21 +129,28 @@ let drawNextFrame = () => {
     }
     particle.age++;
 
-    ctx.beginPath();
-    ctx.strokeStyle = 'red';  // TODO: base it on magnitude
-    ctx.lineCap = "round";
-    ctx.moveTo(particle.x, particle.y);
     for (let i=0; i < 1; i++) { // TODO: draw vectors multiple times?
       if (CANVAS_WIDTH <= particle.x || CANVAS_HEIGHT <= particle.y) { // out of bounds
         break;
       }
+      ctx.beginPath();
+      ctx.lineCap = "round";
+
+      let [r,g,b] = colors[Math.round(particle.x/150 * 9)];
+      //ctx.strokeStyle = 'red';  // TODO: base it on magnitude
+      // let relativeSpeed = getRelativeSpeed()
+      // let strokeStyle = getColor(relativeSpeed, colors)
+      ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+
+      ctx.moveTo(particle.x, particle.y);
       let new_x = particle.x + vector_field[particle.x][particle.y].x;
       let new_y = particle.y + vector_field[particle.x][particle.y].y;
       ctx.lineTo(new_x, new_y)
-      particle.x = new_x;
-      particle.y = new_y;
+      ctx.stroke();
+
+      // Move the particle
+      particle.moveTo(new_x, new_y);
     }
-    ctx.stroke();
 
   })
 }
@@ -164,7 +188,7 @@ let b=0;
  */
 let fade = (ctx) => {
   let prev = ctx.globalCompositeOperation;
-  ctx.fillStyle = "rgba(0, 0, 0, 0.97)";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.97)"; // Reduce 0.97 to make pixel trail shorter
   ctx.globalCompositeOperation = "destination-in";
   ctx.fillRect(0, 0, 150, 150)
   ctx.globalCompositeOperation = prev;
