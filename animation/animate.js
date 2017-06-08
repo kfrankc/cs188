@@ -142,6 +142,7 @@ let drawNextFrame = () => {
       // let strokeStyle = getColor(relativeSpeed, colors)
       ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
 
+
       ctx.moveTo(particle.x, particle.y);
       let new_x = particle.x + vector_field[particle.x][particle.y].x;
       let new_y = particle.y + vector_field[particle.x][particle.y].y;

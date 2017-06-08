@@ -1,3 +1,24 @@
+.canvas-container {
+  position: relative;
+  display: inline-block;
+  width: 150px;  /* must be same as canvas width */
+  height: 150px; /* must be same as canvas width */
+}
+
 canvas {
   border: 1px solid black;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+}
+
+#canvas-background {
+  width: 150px;  /* must be same as canvas width */
+  height: 150px; /* must be same as canvas width */
+  border: solid 1px brown;
+  /*background: darkgray;*/
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  z-index: -1;
 }
