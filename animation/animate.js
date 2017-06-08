@@ -1,10 +1,22 @@
 
 /**
+ * @typedef {Object} Vector - creates a new type named Vector
+ * @property {number} x - x component of vector
+ * @property {number} y - y component of vecto
+ * @property {number} [m] - (optional) magnitude
+ */
+
+
+/******************************
  * STUFF TO BE PASSED IN LATER
  */
 const CANVAS_WIDTH = 150;
 const CANVAS_HEIGHT = 150;
-const particles = [];
+/**
+ * @type {Array<Vector>}
+ */
+const vector_field = [];
+
 
 /**
  * @type {HTMLCanvasElement}
@@ -20,7 +32,7 @@ const FPS = 20;
 const fpsInterval = 1000 / FPS;
 
 /**
- * The maximum number of frames a particle is drawn on the 
+ * The maximum number of frames a particle drawn on the 
  * canvas before it stops moving and stays there until it fades.
  */
 const MAX_PARTICLE_AGE = 100;
@@ -30,6 +42,7 @@ const MAX_PARTICLE_AGE = 100;
  */
 const NUM_PARTICLES = 10;
 let prev = null;
+const particles = [];
 
 
 if (canvas.getContext) {
@@ -49,15 +62,15 @@ class Particle {
   */
   constructor(x, y, age) {
     this.x = x;
-    this.width = y;
+    this.y = y;
     this.age = age;
   }
 
   static rand() {
     // TODO:  needs to go to an actual point on a path
-    let x = Math.random() * CANVAS_HEIGHT;
-    let y = Math.random() * CANVAS_WIDTH;
-    let age = Math.random() * MAX_PARTICLE_AGE;
+    let x = Math.floor(Math.random() * CANVAS_HEIGHT);
+    let y = Math.floor(Math.random() * CANVAS_WIDTH);
+    let age = Math.floor(Math.random() * MAX_PARTICLE_AGE);
     return new Particle(x, y, age);
   }
 
@@ -65,9 +78,9 @@ class Particle {
   * Returns a new particle at a random location and with a random age
   */
   randomize() {
-    this.x = Math.random() * CANVAS_HEIGHT;
-    this.y = Math.random() * CANVAS_WIDTH;
-    this.age = Math.random() * MAX_PARTICLE_AGE;
+    this.x = Math.floor(Math.random() * CANVAS_HEIGHT);
+    this.y = Math.floor(Math.random() * CANVAS_WIDTH);
+    this.age = Math.floor(Math.random() * MAX_PARTICLE_AGE);
   }
 }
 
@@ -77,6 +90,46 @@ for (let i=0; i<NUM_PARTICLES; i++) {
   particles.push(Particle.rand());
 }
 
+// TODO: del
+// DEBUG: initalize vector field
+for(let x = 0; x < CANVAS_WIDTH; x++) {
+  vector_field.push([]);
+  for(let y = 0; y < CANVAS_HEIGHT; y++) {
+    vector_field[x].push({
+      x: 1,
+      y: 1
+    })
+  }
+}
+
+let drawNextFrame = () => {
+  fade(ctx);
+
+  particles.forEach((particle) => {
+    // Particle died, create a new one
+    if (particle.age > MAX_PARTICLE_AGE) {
+        particle.randomize()
+    }
+    particle.age++;
+
+    ctx.beginPath();
+    ctx.strokeStyle = 'red';  // TODO: base it on magnitude
+    ctx.lineCap = "round";
+    ctx.moveTo(particle.x, particle.y);
+    for (let i=0; i < 1; i++) { // TODO: draw vectors multiple times?
+      if (CANVAS_WIDTH <= particle.x || CANVAS_HEIGHT <= particle.y) { // out of bounds
+        break;
+      }
+      let new_x = particle.x + vector_field[particle.x][particle.y].x;
+      let new_y = particle.y + vector_field[particle.x][particle.y].y;
+      ctx.lineTo(new_x, new_y)
+      particle.x = new_x;
+      particle.y = new_y;
+    }
+    ctx.stroke();
+
+  })
+}
 
 
 
@@ -128,7 +181,6 @@ let animate = (timestamp) => {
     // calc elapsed time since last loop
     if (!prev) {
       prev = timestamp;
-      console.log('hi');
     }
     let elapsed = timestamp - prev;
 
@@ -140,8 +192,11 @@ let animate = (timestamp) => {
 
         // Put your drawing code here
 
+        drawNextFrame();
+        return; // TODO: del
+
         // Fade the canvas
-        fade(ctx)
+        fade(ctx);
 
         ctx.beginPath();
         ctx.strokeStyle = 'rgb(255,0,0,0.5)';
