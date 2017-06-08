@@ -119,7 +119,7 @@ def find_path(img_gray):
 			break
 	return [path_list, img_gray]
 
-skel = imread('skel3.png')
+skel = imread('find_path_test_img/skel3.png')
 # greyscale the image
 img_gray = rgb2gray(skel)
 path_list = []
