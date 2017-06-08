@@ -37,6 +37,29 @@ def next_pixel(pixel_matrix):
  				return [r-1, c-1]
  	return [0, 0]
 
+    #  ```````````::hdydmmyosys/.``````````````     
+    #  ````````-odNNNhhhymNNNNNMNh:````````````     
+    #  ``````odmy:.``   `-+hNNNNMMMNs.`````````     
+    #  ````hdNy.            -+ymNMNMMm+````````     
+    #  ```+Nh-                `/mNMNMMMh.``````     
+    #  `-dMN-`                 .dNNNNMMMy``````     
+    #  `oMMs.`           ``.   `+dNMNMMMm``````     
+    #  `yMh-+oso.        -:+os+---sNNNMMN:`````     
+    #  `od:so+ohs+-  `/ydmNNNNMNmy./shNNMdd.```     
+    # `sdNMMMNMMMMMNNNNNNNNNddNMmmysyshNmmy````     
+    #  hNMMMNMMMMMMh/sMMNNNNmmmNm+-`+my/so.````     
+    #  `/NMMMMMMMMy`  /mMMNNNNmm.   .+/`.`.````     
+    #  ``+NMMMMMNy`    `:oyhydy.   `.-`. -`````     
+    #  ``::yyoo/..`    .`         `.-.:.:d+````     
+    #  ``-:`    -+hoo+o+/`       ``.:yooNmhh```     
+    #  ```+.```.-:odysso+:.`     ``.:NNMMMhy```     
+    #  ```.+...-sd+:--/+++h+` ``...:yNMMMMms```     
+    #  ````oh/:hdho:--``.:+-```..-:sNMMMMNMd:``     
+    #  ````-y/:::+syhdhs/-` ``..-+sNNNMMMMd+s:`     
+    #  `````:+-/:-:/:/.`  `````./smNdNMMMMmy.-`     
+    #  ``````.+os////:+/...-/yhs/``y`/mNMd`-o+`     
+    #  ````````:hmmNMMMMNNNMNy-````/+.ssy+:+-``     
+    #  ``````````-oydmmmmds+-``````````````````
 def mask_off(img, r, c):
 	img[r-1][c-1] = 0
 	img[r-1][c] = 0
@@ -96,7 +119,7 @@ def find_path(img_gray):
 			break
 	return [path_list, img_gray]
 
-skel = imread('skel2.png')
+skel = imread('skel3.png')
 # greyscale the image
 img_gray = rgb2gray(skel)
 path_list = []
@@ -112,20 +135,18 @@ plt.imshow(img_gray, interpolation='nearest')
 plt.pause(0)
 plt.draw()
 
+# # Save as json
 # with open('test.json', 'wb') as outfile:
 #     json.dump(path_list, outfile)
 
 im = rgb2gray(skel)
 
-# print out list
-i = 0
+# visualize list on top of original file
 I = np.dstack([im, im, im])
 for path in path_list:
 	color = [randint(0,1), randint(0,1), randint(0,1)]
 	for tup in path:
-		# print "Tuple %i: %i, %i" %(i, tup[0], tup[1])
 		I[tup[0], tup[1], :] = color
-		i = i + 1
 plt.imshow(I, interpolation='nearest')
 plt.pause(0)
 plt.draw()

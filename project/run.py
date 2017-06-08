@@ -23,6 +23,11 @@ i = 1
 
 # fig2, ax = plt.subplots(2, 2, figsize=(10, 8))
 fig = plt.figure(frameon=False)
+ax = plt.Axes(fig, [0., 0., 1., 1.])
+fig.set_size_inches(5.12, 5.12)
+ax.set_axis_off()
+fig.add_axes(ax)
+
 for frame in pixel_array:
 
 	# OUTDATED - kept for future reference
@@ -39,6 +44,7 @@ for frame in pixel_array:
 	# Reference: http://scikit-image.org/docs/dev/auto_examples/xx_applications/plot_thresholding.html
 	thresh = threshold_mean(img_gray) - 100
 	print thresh
+	# print np.shape(frame)
 	binary = img_gray > thresh
 	binary_invert = util.invert(binary)
 
@@ -63,8 +69,8 @@ for frame in pixel_array:
 	# Display
 	# Save; note: convert -delay 20 -loop 0 *png skeleton.gif converts to gif
 	plt.axis('off')
-	plt.imshow(skeleton, cmap=plt.cm.bone)
-	fig.savefig('./img'+ str(img_id) + '/' + str(i) + '.png', bbox_inches='tight', transparent=True)
+	plt.imshow(skeleton, cmap=plt.cm.bone, aspect='auto')
+	fig.savefig('./img'+ str(img_id) + '/' + str(i) + '.png', transparent=True)
 	plt.pause(.1)
 	plt.draw()
 
