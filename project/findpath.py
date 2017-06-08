@@ -96,14 +96,15 @@ def find_path(img_gray):
 			break
 	return [path_list, img_gray]
 
-skel = imread('skel1.png')
+skel = imread('skel2.png')
 # greyscale the image
 img_gray = rgb2gray(skel)
 path_list = []
-for i in xrange(0, 8, 1):
-	if debug:
-		print "i: %i" %(i)
+path_exist = True
+while path_exist:
 	[path, img_gray] = find_path(img_gray)
+	if not path:
+		path_exist = False
 	path_list.append(path)
 
 fig = plt.figure(frameon=False)
