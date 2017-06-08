@@ -1,3 +1,11 @@
+
+/**
+ * STUFF TO BE PASSED IN LATER
+ */
+const CANVAS_WIDTH = 150;
+const CANVAS_HEIGHT = 150;
+const particles = [];
+
 /**
  * @type {HTMLCanvasElement}
  */
@@ -10,6 +18,17 @@ let ctx;
 
 const FPS = 20;
 const fpsInterval = 1000 / FPS;
+
+/**
+ * The maximum number of frames a particle is drawn on the 
+ * canvas before it stops moving and stays there until it fades.
+ */
+const MAX_PARTICLE_AGE = 100;
+
+/**
+ * The number of particles to be displayed
+ */
+const NUM_PARTICLES = 10;
 let prev = null;
 
 
@@ -19,6 +38,45 @@ if (canvas.getContext) {
 } else {
   // canvas-unsupported code here
 }
+
+
+class Particle {
+ /**
+  * 
+  * @param {number} x 
+  * @param {number} y 
+  * @param {number} age 
+  */
+  constructor(x, y, age) {
+    this.x = x;
+    this.width = y;
+    this.age = age;
+  }
+
+  static rand() {
+    // TODO:  needs to go to an actual point on a path
+    let x = Math.random() * CANVAS_HEIGHT;
+    let y = Math.random() * CANVAS_WIDTH;
+    let age = Math.random() * MAX_PARTICLE_AGE;
+    return new Particle(x, y, age);
+  }
+
+ /**
+  * Returns a new particle at a random location and with a random age
+  */
+  randomize() {
+    this.x = Math.random() * CANVAS_HEIGHT;
+    this.y = Math.random() * CANVAS_WIDTH;
+    this.age = Math.random() * MAX_PARTICLE_AGE;
+  }
+}
+
+
+// Initialize particles
+for (let i=0; i<NUM_PARTICLES; i++) {
+  particles.push(Particle.rand());
+}
+
 
 
 
@@ -59,6 +117,10 @@ let fade = (ctx) => {
   ctx.globalCompositeOperation = prev;
 }
 
+/**
+ * 
+ * @param {number} - DOMHighResTimeStamp
+ */
 let animate = (timestamp) => {
     // request another frame
     requestAnimationFrame(animate);
@@ -78,8 +140,9 @@ let animate = (timestamp) => {
 
         // Put your drawing code here
 
-
+        // Fade the canvas
         fade(ctx)
+
         ctx.beginPath();
         ctx.strokeStyle = 'rgb(255,0,0,0.5)';
 
@@ -93,6 +156,6 @@ let animate = (timestamp) => {
 }
 
 // Start animating
-requestAnimationFrame(animate);
+window.requestAnimationFrame(animate);
 
 window.abc = () => { fade(ctx) };
