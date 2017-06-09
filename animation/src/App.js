@@ -65,6 +65,7 @@ class AppContainer extends Component {
         height={this.state.dimensions.height}
         vector_field={this.state.vector_field}
         starting_points={this.state.starting_points}
+        options={this.props.options}
       />
     );
   }
@@ -73,6 +74,7 @@ class AppContainer extends Component {
 AppContainer.propTypes = {
   // URL to json data
   data_url: PropTypes.string.isRequired,
+  options: PropTypes.object.isRequired,
 }
 
 class App extends Component {
@@ -94,11 +96,7 @@ class App extends Component {
       this.props.starting_points,
       canvas,
       colors,
-      {
-        fps: 20,
-        num_particles: 10,
-        max_particle_age: 100,
-      },
+      this.props.options,
     );
   }
 
@@ -126,6 +124,7 @@ App.propTypes = {
   starting_points: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.array.isRequired]).isRequired, // TOOD: array of objects
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  options: PropTypes.object.isRequired,
 };
 
 export default AppContainer;
