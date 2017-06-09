@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import angiogram from './angiogram.js';
 import "./angiogram.css";
 
-class App extends Component {
+class AppContainer extends Component {
 
   componentDidMount() {
     let canvas = document.getElementById('canvas');
@@ -48,5 +49,21 @@ class App extends Component {
     );
   }
 }
+
+class App extends Component {
+  render() {
+    return (
+      <div className="canvas-container">
+        <div id="canvas-overlay"></div>
+        <canvas id="canvas" width="150" height="150"></canvas>
+        <div id="canvas-background"></div>
+      </div>
+    );
+  }
+}
+
+App.propTypes = {
+  width: PropTypes.string
+};
 
 export default App;

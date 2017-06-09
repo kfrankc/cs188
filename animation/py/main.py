@@ -29,7 +29,7 @@ def get_vectors(path_array):
     return vectors
 
 
-with open('path.json') as f:    
+with open('path.json') as f:
     path_array = json.load(f)
     path_array = transpose_points(path_array)
     vectors = get_vectors(path_array)
@@ -41,12 +41,16 @@ with open('path.json') as f:
     for x in range(width):
         vec_field.append([])
         for y in range(height):
-            vec_field.append((0,0))
+            vec_field[x].append((0,0))
 
-    pprint(vec_field)
+    for i, (x, y) in enumerate(path_array):
+        vec_field[x][y] = vec_field[i]
+
+    print(len(vec_field[89]))
+    #print(vec_field)
 
 
 
-            
+
 
     #pprint(get_vectors(path_array))
