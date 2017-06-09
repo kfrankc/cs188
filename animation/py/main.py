@@ -86,8 +86,21 @@ def init_vec_field(width, height):
 
     return vec_field
 
+def new_vectors_shifted(vectors, x, y):
+    """
+        Input: array of vectors: [{x:x, y:y},{}]
+        x: amount to shift
+        y: amount to shift
+    """
+    
+    new_vec = []
+    for vec in vectors:
+        new_vec.append(create_vector(vec['x'] + x, vec['y']+y))
 
-def write_to_json(vector_field, starting_points=None, filename="data.json", indent=None):
+    return new_vec
+
+
+def format_to_file(vector_field, starting_points=None, filename="data.json", indent=None):
     """
     output:
         {
@@ -109,27 +122,55 @@ def write_to_json(vector_field, starting_points=None, filename="data.json", inde
         output.write(json.dumps(data, indent=indent))
 
 
+def write_to_json(data, filename, indent=None):
+    with open(filename, "w") as output:
+        output.write(json.dumps(data, indent=indent))
+
+
+def add_to_vec_field(coordinates, vectors, vec_field):
+    """
+    Input:
+        coordinates:  array of coords - [{x,y}, {x,y}, ...]
+        vectors:  array of vectors - [{x,y}, {x,y}, ...]
+        vec_field:  [[{}],
+                     [],
+                    ]
+    Coordinates should correspond to vector at same index
+    """
+
+    # Add in the path to the vec field
+    for i, point in enumerate(coordinates):
+        x = get_x(point)
+        y = get_y(point)
+        vec_field[x][y] = vectors[i]
+
+
 def run():
     with open('path.json') as f:
         path_array = json.load(f)
         path_array = convert_frank_to_arvin(path_array)
         vectors = get_vectors(path_array)
 
+
+
         width  = 1024 # TODO: this is set manually for now...
         height = 1024
+
 
         # Init vec field with all (0,0)
         vec_field = init_vec_field(width,height)
 
-        # Add in the path to the vec field
-        for i, point in enumerate(path_array):
-            x = get_x(point)
-            y = get_y(point)
-            vec_field[x][y] = vectors[i]
+        add_to_vec_field(path_array, vectors, vec_field)
+        #add_to_vec_field(path_array, new_vectors_shifted(vectors, -1, -1), vec_field)
+        #add_to_vec_field(path_array, new_vectors_shifted(vectors, -2, -2), vec_field)
+        #add_to_vec_field(path_array, new_vectors_shifted(vectors, -3, -3), vec_field)
 
-
-        write_to_json(vec_field, path_array, filename="data-paths.json", indent=1)
+        format_to_file(vec_field, path_array, filename="data-paths.json", indent=1)
+        format_to_file(vec_field, "ALL", filename="data-all.json", indent=1)
         #print(json.dumps(path_array, indent=2))
+
+        #write_to_json(path_array, "corrected-path.json", indent=2)
+        #write_to_json(new_vec, "corrected-path.shifted.json", indent=2)
 
 def test_data():
     n = 150
@@ -143,10 +184,10 @@ def test_data():
     for x in range(n):
         starting_points.append(create_vector(x, n-x))
 
-    write_to_json(vector_field, starting_points, filename="test-paths.json", indent=1)
-    #write_to_json(vector_field, "ALL", filename="test-all.json", indent=1)
+    format_to_file(vector_field, starting_points, filename="test-paths.json", indent=1)
+    #format_to_file(vector_field, "ALL", filename="test-all.json", indent=1)
 
     
-test_data()
-#run()
+#test_data()
+run()
 
