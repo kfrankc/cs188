@@ -10,9 +10,9 @@
 /**
  * Factory function that returns a particle class.
  * Needed to create a closure for canvas dimensions, etc
- * @param {number} canvas_width 
- * @param {number} canvas_height 
- * @param {number} max_particle_age 
+ * @param {number} canvas_width
+ * @param {number} canvas_height
+ * @param {number} max_particle_age
  */
 let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
 
@@ -21,10 +21,10 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
  */
   class Particle {
   /**
-    * 
-    * @param {number} x 
-    * @param {number} y 
-    * @param {number} age 
+    *
+    * @param {number} x
+    * @param {number} y
+    * @param {number} age
     */
     constructor(x, y, age) {
       this.x = x;
@@ -32,6 +32,9 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
       this.age = age;
     }
 
+   /**
+    * Returns a new particle at a random location and with a random age
+    */
     static rand() {
       // TODO:  needs to go to an actual point on a path
       let x = Math.floor(Math.random() * canvas_height);
@@ -40,9 +43,6 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
       return new Particle(x, y, age);
     }
 
-  /**
-    * Returns a new particle at a random location and with a random age
-    */
     randomize() {
       this.x = Math.floor(Math.random() * canvas_height);
       this.y = Math.floor(Math.random() * canvas_width);
@@ -51,8 +51,8 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
 
   /**
    * Moves the particle to (x,y)
-   * @param {number} newX 
-   * @param {number} newY 
+   * @param {number} newX
+   * @param {number} newY
    */
     moveTo(newX, newY) {
       this.x = newX;
@@ -79,7 +79,7 @@ const fade = (ctx) => {
 
 /**
 *
-* @param {Array<Array<Vector>>} vector_field - vector field 
+* @param {Array<Array<Vector>>} vector_field - vector field
 * @param {HTMLCanvasElement} canvas - canvas
 * @param {Array} colors - canvas.  Should check if getContext('2d') before calling this function
 * @param {*} [options] - options
@@ -93,7 +93,7 @@ let angiogram = (vector_field, canvas, colors, options) => {
    */
   const num_particles = options.NUM_PARTICLES || 10;
   /**
-   * The maximum number of frames a particle drawn on the 
+   * The maximum number of frames a particle drawn on the
    * canvas before it stops moving and stays there until it fades.
    */
   const max_particle_age = options.MAX_PARTICLE_AGE || 100;
@@ -154,7 +154,7 @@ let angiogram = (vector_field, canvas, colors, options) => {
   }
 
   /**
-   * 
+   *
    * @param {number} - DOMHighResTimeStamp
    */
   let updateAnimation = (timestamp) => {
