@@ -8,6 +8,8 @@ let options = {
     max_particle_age: 100,
 };
 
+let url = "/data-paths.json";
+
 // TODO: public folder node env
-ReactDOM.render(<AppContainer data_url="/data-paths.json" options={options}/>,
+ReactDOM.render(<AppContainer data_url={url} options={options}/>,
  document.getElementById('root'));
