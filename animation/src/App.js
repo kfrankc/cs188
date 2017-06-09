@@ -88,7 +88,18 @@ class App extends Component {
     ctx.fillRect(10, 10, 50, 50);
     ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
     ctx.fillRect(30, 30, 50, 50);
-    angiogram(this.props.vector_field, this.props.starting_points, canvas, colors);
+
+
+    angiogram(this.props.vector_field,
+      this.props.starting_points,
+      canvas,
+      colors,
+      {
+        fps: 20,
+        num_particles: 10,
+        max_particle_age: 100,
+      },
+    );
   }
 
   render() {

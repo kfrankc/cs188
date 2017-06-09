@@ -71,6 +71,21 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age, starting_p
 }
 
 
+/**
+ * options:
+ *  {
+ *    // The number of particles to be displayed
+ *    fps: number,
+ *
+ *    // The maximum number of frames a particle drawn on the
+ *    // canvas before it stops moving and stays there until it fades.
+ *    num_particles: number,
+ *
+ *    max_particle_age: number,
+ *
+ *
+ *  }
+ */
 
 
 /**
@@ -79,22 +94,10 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age, starting_p
 * @param {(string|Array)} starting_points - Either "ALL" or array of {x:x,y:y} coordinates
 * @param {HTMLCanvasElement} canvas - canvas
 * @param {Array} colors - canvas.  Should check if getContext('2d') before calling this function
-* @param {*} [options] - options
+* @param {Object} [options] - options
 */
 let angiogram = (vector_field, starting_points, canvas, colors, options) => {
-  // Options
-  options = options || {};
-  const fps = options.fps || 20;
-  /**
-   * The number of particles to be displayed
-   */
-  const num_particles = options.NUM_PARTICLES || 10;
-  /**
-   * The maximum number of frames a particle drawn on the
-   * canvas before it stops moving and stays there until it fades.
-   */
-  const max_particle_age = options.MAX_PARTICLE_AGE || 100;
-
+  const {fps, num_particles, max_particle_age} = options;
 
   const fpsInterval = 1000 / fps;
   const canvas_width = canvas.width;
