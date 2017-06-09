@@ -29,7 +29,7 @@ canvas {
   width: 150px;  /* must be same as canvas width */
   height: 150px; /* must be same as canvas width */
   border: solid 1px brown;
-  /*background: black;*/
+  background: black;
   position: absolute;
   top: 0px;
   bottom: 0px;

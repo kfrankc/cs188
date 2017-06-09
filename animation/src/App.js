@@ -49,10 +49,9 @@ class AppContainer extends Component {
     */
 
 
-
-
     const component = this;
-    axios.get('/data-path-only.json') // todo: public folder node env
+    //axios.get('/test-paths.json') // todo: public folder node env
+    axios.get('/data-paths.json') // todo: public folder node env
       .then((response) => {
         const vector_field = response.data.vector_field;
         const starting_points = response.data.starting_points;
@@ -100,6 +99,7 @@ class App extends Component {
         // canvas-unsupported code here
     }
 
+    // DEBUG
     ctx.fillStyle = 'rgb(200, 0, 0)';
     ctx.fillRect(10, 10, 50, 50);
     ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';

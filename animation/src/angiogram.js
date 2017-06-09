@@ -116,11 +116,12 @@ let angiogram = (vector_field, starting_points, canvas, colors, options) => {
    * @param {CanvasRenderingContext2D} ctx
    */
   const fade = (ctx) => {
-    let prev = ctx.globalCompositeOperation;
-    ctx.fillStyle = "rgba(0, 0, 0, 0.97)"; // Reduce 0.97 to make pixel trail shorter
-    ctx.globalCompositeOperation = "destination-in";
-    ctx.fillRect(0, 0, canvas_width, canvas_height);
-    ctx.globalCompositeOperation = prev;
+      ctx.save();
+      ctx.globalAlpha = 0.1;
+      ctx.globalCompositeOperation='destination-out';
+      ctx.fillStyle= '#FFF';
+      ctx.fillRect(0,0,canvas_width, canvas_height);
+      ctx.restore();
   }
 
  /**
@@ -136,7 +137,7 @@ let angiogram = (vector_field, starting_points, canvas, colors, options) => {
       }
       particle.age++;
 
-      for (let i=0; i < 1; i++) { // TODO: draw vectors multiple times?
+      for (let i=0; i < 2; i++) { // TODO: draw vectors multiple times?
         if (canvas_width <= particle.x || canvas_height <= particle.y) { // out of bounds
           break;
         }
