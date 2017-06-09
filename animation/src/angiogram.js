@@ -132,7 +132,7 @@ let angiogram = (vector_field, starting_points, canvas, colors, options) => {
 
     particles.forEach((particle) => {
       // Particle died, create a new one
-      if (particle.age > max_particle_age) {
+      if (particle.age >= max_particle_age) {
           particle.randomize()
       }
       particle.age++;
@@ -156,6 +156,13 @@ let angiogram = (vector_field, starting_points, canvas, colors, options) => {
         let v = vector_field;
         let new_x = particle.x + vector_field[particle.x][particle.y].x;
         let new_y = particle.y + vector_field[particle.x][particle.y].y;
+
+        // If reached the end of line, let particle die
+        if (new_x === particle.x && new_y === particle.y) {
+          particle.age = max_particle_age;
+          break;
+        }
+
         ctx.lineTo(new_x, new_y)
         ctx.stroke();
 
