@@ -6,6 +6,14 @@
  * @property {number} [m] - (optional) magnitude
  */
 
+/**
+ * Return a number between start and end, inclusive
+ * @param {number} start
+ * @param {number} end
+ */
+let rand_int = (start, end) => {
+  return Math.round(start + Math.random()*(end-start));
+}
 
 /**
  * Factory function that returns a particle class.
@@ -37,16 +45,16 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
     */
     static rand() {
       // TODO:  needs to go to an actual point on a path
-      let x = Math.floor(Math.random() * canvas_height);
-      let y = Math.floor(Math.random() * canvas_width);
-      let age = Math.floor(Math.random() * max_particle_age);
+      let x = rand_int(0, canvas_height-1);
+      let y = rand_int(0, canvas_height-1);
+      let age = rand_int(0, max_particle_age);
       return new Particle(x, y, age);
     }
 
     randomize() {
-      this.x = Math.floor(Math.random() * canvas_height);
-      this.y = Math.floor(Math.random() * canvas_width);
-      this.age = Math.floor(Math.random() * max_particle_age);
+      this.x = rand_int(0, canvas_height-1);
+      this.y = rand_int(0, canvas_width-1);
+      this.age = rand_int(0, max_particle_age);
     }
 
   /**
