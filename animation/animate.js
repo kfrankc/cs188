@@ -7,43 +7,190 @@
  */
 
 
+/**
+ * Factory function that returns a particle class.
+ * Needed to create a closure for canvas dimensions, etc
+ * @param {number} canvas_width 
+ * @param {number} canvas_height 
+ * @param {number} max_particle_age 
+ */
+let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
+
+/**
+ * Particle
+ */
+  class Particle {
+  /**
+    * 
+    * @param {number} x 
+    * @param {number} y 
+    * @param {number} age 
+    */
+    constructor(x, y, age) {
+      this.x = x;
+      this.y = y;
+      this.age = age;
+    }
+
+    static rand() {
+      // TODO:  needs to go to an actual point on a path
+      let x = Math.floor(Math.random() * canvas_height);
+      let y = Math.floor(Math.random() * canvas_width);
+      let age = Math.floor(Math.random() * max_particle_age);
+      return new Particle(x, y, age);
+    }
+
+  /**
+    * Returns a new particle at a random location and with a random age
+    */
+    randomize() {
+      this.x = Math.floor(Math.random() * canvas_height);
+      this.y = Math.floor(Math.random() * canvas_width);
+      this.age = Math.floor(Math.random() * max_particle_age);
+    }
+
+  /**
+   * Moves the particle to (x,y)
+   * @param {number} newX 
+   * @param {number} newY 
+   */
+    moveTo(newX, newY) {
+      this.x = newX;
+      this.y = newY;
+    }
+  }
+
+  return Particle;
+}
+
+
+
+/**
+ * Fade the previously drawn lines
+ * @param {CanvasRenderingContext2D} ctx
+ */
+const fade = (ctx) => {
+  let prev = ctx.globalCompositeOperation;
+  ctx.fillStyle = "rgba(0, 0, 0, 0.97)"; // Reduce 0.97 to make pixel trail shorter
+  ctx.globalCompositeOperation = "destination-in";
+  ctx.fillRect(0, 0, 150, 150)
+  ctx.globalCompositeOperation = prev;
+}
+
+/**
+*
+* @param {Array<Array<Vector>>} vector_field - vector field 
+* @param {HTMLCanvasElement} canvas - canvas
+* @param {Array} colors - canvas.  Should check if getContext('2d') before calling this function
+* @param {*} [options] - options
+*/
+let angiogram = (vector_field, canvas, colors, options) => {
+  // Options
+  options = options || {};
+  const fps = options.fps || 20;
+  /**
+   * The number of particles to be displayed
+   */
+  const num_particles = options.NUM_PARTICLES || 10;
+  /**
+   * The maximum number of frames a particle drawn on the 
+   * canvas before it stops moving and stays there until it fades.
+   */
+  const max_particle_age = options.MAX_PARTICLE_AGE || 100;
+
+
+  const fpsInterval = 1000 / fps;
+  const canvas_width = canvas.width;
+  const canvas_height = canvas.height;
+  const ctx = canvas.getContext('2d');
+  const Particle = ParticleFactory(canvas_width, canvas_height, max_particle_age);
+  const particles = [];
+  let prev = null;
+
+  // Initialize particles
+  for (let i=0; i<num_particles; i++) {
+    particles.push(Particle.rand());
+  }
+
+
+ /**
+  * Move the particles
+  */
+  let drawNextFrame = () => {
+    fade(ctx);
+
+    particles.forEach((particle) => {
+      // Particle died, create a new one
+      if (particle.age > max_particle_age) {
+          particle.randomize()
+      }
+      particle.age++;
+
+      for (let i=0; i < 1; i++) { // TODO: draw vectors multiple times?
+        if (canvas_width <= particle.x || canvas_height <= particle.y) { // out of bounds
+          break;
+        }
+        ctx.beginPath();
+        ctx.lineCap = "round";
+
+        let [r,g,b] = colors[Math.round(particle.x/150 * 9)];
+        //ctx.strokeStyle = 'red';  // TODO: base it on magnitude
+        // let relativeSpeed = getRelativeSpeed()
+        // let strokeStyle = getColor(relativeSpeed, colors)
+        ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+
+
+        ctx.moveTo(particle.x, particle.y);
+        let new_x = particle.x + vector_field[particle.x][particle.y].x;
+        let new_y = particle.y + vector_field[particle.x][particle.y].y;
+        ctx.lineTo(new_x, new_y)
+        ctx.stroke();
+
+        // Move the particle
+        particle.moveTo(new_x, new_y);
+      }
+
+    })
+  }
+
+  /**
+   * 
+   * @param {number} - DOMHighResTimeStamp
+   */
+  let updateAnimation = (timestamp) => {
+    // request another frame
+    requestAnimationFrame(updateAnimation);
+
+    // calc elapsed time since last loop
+    if (!prev) {
+      prev = timestamp;
+    }
+    let elapsed = timestamp - prev;
+
+    // if enough time has elapsed, draw the next frame
+    if (true) {
+      // Get ready for next frame by setting then=now, but also adjust for your
+      // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
+      prev = timestamp - (elapsed % fpsInterval);
+
+      // Put your drawing code here
+
+      drawNextFrame();
+      return; // TODO: del
+    }
+  }
+
+  // Start animating
+  window.requestAnimationFrame(updateAnimation);
+
+}
+
 /******************************
  * STUFF TO BE PASSED IN LATER
  */
-const CANVAS_WIDTH = 150;
-const CANVAS_HEIGHT = 150;
-/**
- * @type {Array<Vector>}
- */
-const vector_field = [];
-
-
-/**
- * @type {HTMLCanvasElement}
- */
+// TODO: del
 let canvas = document.getElementById('canvas');
-
-/**
- * @type {CanvasRenderingContext2D}
- */
-let ctx;
-
-const FPS = 20;
-const fpsInterval = 1000 / FPS;
-
-/**
- * The maximum number of frames a particle drawn on the 
- * canvas before it stops moving and stays there until it fades.
- */
-const MAX_PARTICLE_AGE = 100;
-
-/**
- * The number of particles to be displayed
- */
-const NUM_PARTICLES = 10;
-let prev = null;
-const particles = [];
-
+let ctx = canvas.getContext('2d');
 const colors = [
   [255,255,0],
   [255,226,0],
@@ -56,6 +203,14 @@ const colors = [
   [255,28,0],
   [255,0,0],
 ]
+const vector_field = [];
+for(let x = 0; x < canvas.width; x++) {
+  vector_field.push([]);
+  for(let y = 0; y < canvas.height; y++) {
+    vector_field[x].push({ x: 1, y: 1 })
+  }
+}
+
 
 if (canvas.getContext) {
   ctx = canvas.getContext('2d');
@@ -63,110 +218,10 @@ if (canvas.getContext) {
 } else {
   // canvas-unsupported code here
 }
-
-
-class Particle {
- /**
-  * 
-  * @param {number} x 
-  * @param {number} y 
-  * @param {number} age 
-  */
-  constructor(x, y, age) {
-    this.x = x;
-    this.y = y;
-    this.age = age;
-  }
-
-  static rand() {
-    // TODO:  needs to go to an actual point on a path
-    let x = Math.floor(Math.random() * CANVAS_HEIGHT);
-    let y = Math.floor(Math.random() * CANVAS_WIDTH);
-    let age = Math.floor(Math.random() * MAX_PARTICLE_AGE);
-    return new Particle(x, y, age);
-  }
-
- /**
-  * Returns a new particle at a random location and with a random age
-  */
-  randomize() {
-    this.x = Math.floor(Math.random() * CANVAS_HEIGHT);
-    this.y = Math.floor(Math.random() * CANVAS_WIDTH);
-    this.age = Math.floor(Math.random() * MAX_PARTICLE_AGE);
-  }
-
-  moveTo(newX, newY) {
-    this.x = newX;
-    this.y = newY;
-  }
-}
-
-
-// Initialize particles
-for (let i=0; i<NUM_PARTICLES; i++) {
-  particles.push(Particle.rand());
-}
-
-// TODO: del
-// DEBUG: initalize vector field
-for(let x = 0; x < CANVAS_WIDTH; x++) {
-  vector_field.push([]);
-  for(let y = 0; y < CANVAS_HEIGHT; y++) {
-    vector_field[x].push({
-      x: 1,
-      y: 1
-    })
-  }
-}
-
-let drawNextFrame = () => {
-  fade(ctx);
-
-  particles.forEach((particle) => {
-    // Particle died, create a new one
-    if (particle.age > MAX_PARTICLE_AGE) {
-        particle.randomize()
-    }
-    particle.age++;
-
-    for (let i=0; i < 1; i++) { // TODO: draw vectors multiple times?
-      if (CANVAS_WIDTH <= particle.x || CANVAS_HEIGHT <= particle.y) { // out of bounds
-        break;
-      }
-      ctx.beginPath();
-      ctx.lineCap = "round";
-
-      let [r,g,b] = colors[Math.round(particle.x/150 * 9)];
-      //ctx.strokeStyle = 'red';  // TODO: base it on magnitude
-      // let relativeSpeed = getRelativeSpeed()
-      // let strokeStyle = getColor(relativeSpeed, colors)
-      ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-
-
-      ctx.moveTo(particle.x, particle.y);
-      let new_x = particle.x + vector_field[particle.x][particle.y].x;
-      let new_y = particle.y + vector_field[particle.x][particle.y].y;
-      ctx.lineTo(new_x, new_y)
-      ctx.stroke();
-
-      // Move the particle
-      particle.moveTo(new_x, new_y);
-    }
-
-  })
-}
-
-
-
-
-
 ctx.fillStyle = 'rgb(200, 0, 0)';
 ctx.fillRect(10, 10, 50, 50);
-
 ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
 ctx.fillRect(30, 30, 50, 50);
-
-
 let test = () => {
   ctx.beginPath();
   ctx.strokeStyle = 'rgb(255,0,0,0.5)';
@@ -179,63 +234,5 @@ let test = () => {
   ctx.lineTo(120, 85);
   ctx.stroke();
 }
-let a=0;
-let b=0;
 
-
-/**
- * Fade the previously drawn lines
- * @param {CanvasRenderingContext2D} ctx
- */
-let fade = (ctx) => {
-  let prev = ctx.globalCompositeOperation;
-  ctx.fillStyle = "rgba(0, 0, 0, 0.97)"; // Reduce 0.97 to make pixel trail shorter
-  ctx.globalCompositeOperation = "destination-in";
-  ctx.fillRect(0, 0, 150, 150)
-  ctx.globalCompositeOperation = prev;
-}
-
-/**
- * 
- * @param {number} - DOMHighResTimeStamp
- */
-let animate = (timestamp) => {
-    // request another frame
-    requestAnimationFrame(animate);
-
-    // calc elapsed time since last loop
-    if (!prev) {
-      prev = timestamp;
-    }
-    let elapsed = timestamp - prev;
-
-    // if enough time has elapsed, draw the next frame
-    if (true) {
-        // Get ready for next frame by setting then=now, but also adjust for your
-        // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
-        prev = timestamp - (elapsed % fpsInterval);
-
-        // Put your drawing code here
-
-        drawNextFrame();
-        return; // TODO: del
-
-        // Fade the canvas
-        fade(ctx);
-
-        ctx.beginPath();
-        ctx.strokeStyle = 'rgb(255,0,0,0.5)';
-
-        ctx.moveTo(a,b);
-        ctx.lineTo(a+1, b+1);
-        a = (a+1)%150;
-        b = (b+1)%150;
-        ctx.stroke();
-        ctx.closePath();
-    }
-}
-
-// Start animating
-window.requestAnimationFrame(animate);
-
-window.abc = () => { fade(ctx) };
+angiogram(vector_field, canvas, colors);
