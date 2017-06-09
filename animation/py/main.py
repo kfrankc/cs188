@@ -141,12 +141,12 @@ def test_data():
 
     starting_points = []
     for x in range(n):
-        starting_points.append((x, n-x))
+        starting_points.append(create_vector(x, n-x))
 
-    #write_to_json(vector_field, starting_points, filename="test.json", indent=1)
+    write_to_json(vector_field, starting_points, filename="test-paths.json", indent=1)
     #write_to_json(vector_field, "ALL", filename="test-all.json", indent=1)
 
     
-#test_data()
-run()
+test_data()
+#run()
 
