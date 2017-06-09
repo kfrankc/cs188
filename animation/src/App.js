@@ -41,29 +41,35 @@ class AppContainer extends Component {
 
   render() {
     return (
-      <div className="canvas-container">
-        <div id="canvas-overlay"></div>
-        <canvas id="canvas" width="150" height="150"></canvas>
-        <div id="canvas-background"></div>
-      </div>
+      <App
+        width={150}
+        height={150}
+      />
     );
   }
 }
 
 class App extends Component {
-  render() {
+    render() {
+    let style = {
+      width: this.props.width,
+      height: this.props.height,
+    }
+
     return (
       <div className="canvas-container">
-        <div id="canvas-overlay"></div>
-        <canvas id="canvas" width="150" height="150"></canvas>
-        <div id="canvas-background"></div>
+        <div id="canvas-overlay" style={style}></div>
+        <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
+        <div id="canvas-background" style={style}
+        ></div>
       </div>
     );
   }
 }
 
 App.propTypes = {
-  width: PropTypes.string
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 };
 
-export default App;
+export default AppContainer;
