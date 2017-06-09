@@ -1,3 +1,4 @@
+import "./angiogram.css";
 
 /**
  * @typedef {Object} Vector - creates a new type named Vector
@@ -190,57 +191,6 @@ let angiogram = (vector_field, canvas, colors, options) => {
 
   // Start animating
   window.requestAnimationFrame(updateAnimation);
-
 }
 
-/******************************
- * STUFF TO BE PASSED IN LATER
- */
-// TODO: del
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext('2d');
-const colors = [
-  [255,255,0],
-  [255,226,0],
-  [255,198,0],
-  [255,170,0],
-  [255,141,0],
-  [255,113,0],
-  [255,85,0],
-  [255,56,0],
-  [255,28,0],
-  [255,0,0],
-]
-const vector_field = [];
-for(let x = 0; x < canvas.width; x++) {
-  vector_field.push([]);
-  for(let y = 0; y < canvas.height; y++) {
-    vector_field[x].push({ x: 1, y: 1 })
-  }
-}
-
-
-if (canvas.getContext) {
-  ctx = canvas.getContext('2d');
-  // drawing code here
-} else {
-  // canvas-unsupported code here
-}
-ctx.fillStyle = 'rgb(200, 0, 0)';
-ctx.fillRect(10, 10, 50, 50);
-ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
-ctx.fillRect(30, 30, 50, 50);
-let test = () => {
-  ctx.beginPath();
-  ctx.strokeStyle = 'rgb(255,0,0,0.5)';
-
-  ctx.moveTo(10, 10);
-  ctx.lineTo(40, 80);
-  ctx.stroke();
-
-  ctx.moveTo(50, 80);
-  ctx.lineTo(120, 85);
-  ctx.stroke();
-}
-
-angiogram(vector_field, canvas, colors);
+export default angiogram;
