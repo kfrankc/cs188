@@ -100,6 +100,7 @@ def run():
 
         # Valid
         #print(json.dumps(path_array, indent=2))
+run()
 
 def test_data():
     n = 150
@@ -111,14 +112,13 @@ def test_data():
 
     starting_points = []
     for x in range(n):
-        for y in range(n):
-            starting_points.append((x,y))
+        starting_points.append((x, n-x))
+    print(starting_points)
 
-    #write_to_json(vector_field, starting_points, filename="test.json", indent=1)
-    write_to_json(vector_field, "ALL", filename="test-all.json", indent=1)
+    write_to_json(vector_field, starting_points, filename="test.json", indent=1)
+    #write_to_json(vector_field, "ALL", filename="test-all.json", indent=1)
 
     
-test_data()
-#run()
+#test_data()
 
 

@@ -52,7 +52,7 @@ class AppContainer extends Component {
 
 
     const component = this;
-    axios.get('/test-all.json') // todo: public folder node env
+    axios.get('/data-path-only.json') // todo: public folder node env
       .then((response) => {
         const vector_field = response.data.vector_field;
         const starting_points = response.data.starting_points;
