@@ -4,8 +4,8 @@ import AppContainer from './App';
 
 let options = {
     fps: 20,
-    num_particles: 20,
-    max_particle_age: 10,
+    num_particles: 10,
+    max_particle_age: 100,
 };
 
 // TODO: public folder node env
