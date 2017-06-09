@@ -72,17 +72,6 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age, starting_p
 
 
 
-/**
- * Fade the previously drawn lines
- * @param {CanvasRenderingContext2D} ctx
- */
-const fade = (ctx) => {
-  let prev = ctx.globalCompositeOperation;
-  ctx.fillStyle = "rgba(0, 0, 0, 0.97)"; // Reduce 0.97 to make pixel trail shorter
-  ctx.globalCompositeOperation = "destination-in";
-  ctx.fillRect(0, 0, 150, 150)
-  ctx.globalCompositeOperation = prev;
-}
 
 /**
 *
@@ -122,11 +111,22 @@ let angiogram = (vector_field, starting_points, canvas, colors, options) => {
     particles.push(p);
   }
 
+  /**
+   * Fade the previously drawn lines
+   * @param {CanvasRenderingContext2D} ctx
+   */
+  const fade = (ctx) => {
+    let prev = ctx.globalCompositeOperation;
+    ctx.fillStyle = "rgba(0, 0, 0, 0.97)"; // Reduce 0.97 to make pixel trail shorter
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.fillRect(0, 0, canvas_width, canvas_height);
+    ctx.globalCompositeOperation = prev;
+  }
 
  /**
   * Move the particles
   */
-  let drawNextFrame = () => {
+  const drawNextFrame = () => {
     fade(ctx);
 
     particles.forEach((particle) => {
