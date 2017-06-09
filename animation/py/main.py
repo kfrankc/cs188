@@ -38,10 +38,15 @@ with open('path.json') as f:
     height = 1024
     vec_field = []
 
-    #for x in range(width):
-        #vec_field.append([])
-        #for y in range(height):
-            #vec_field.
+    for x in range(width):
+        vec_field.append([])
+        for y in range(height):
+            vec_field.append((0,0))
+
+    pprint(vec_field)
+
+
+
             
 
     #pprint(get_vectors(path_array))

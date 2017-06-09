@@ -1,5 +1,3 @@
-import "./angiogram.css";
-
 /**
  * @typedef {Object} Vector - creates a new type named Vector
  * @property {number} x - x component of vector
