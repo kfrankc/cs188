@@ -5,6 +5,19 @@
   height: 150px; /* must be same as canvas width */
 }
 
+#canvas-overlay {
+  width: 150px;  /* must be same as canvas width */
+  height: 150px; /* must be same as canvas width */
+  border: solid 1px brown;
+  background: blue;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  z-index: 1;
+
+  display: none; /* comment out to show */
+}
+
 canvas {
   border: 1px solid black;
   position: absolute;
