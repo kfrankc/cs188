@@ -145,7 +145,7 @@ let angiogram = (vector_field, canvas, colors, options) => {
         //ctx.strokeStyle = 'red';  // TODO: base it on magnitude
         // let relativeSpeed = getRelativeSpeed()
         // let strokeStyle = getColor(relativeSpeed, colors)
-        ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 1)`;
 
 
         ctx.moveTo(particle.x, particle.y);
