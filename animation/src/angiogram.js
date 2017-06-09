@@ -20,8 +20,9 @@ let rand_int = (start, end) => {
  * @param {number} canvas_width
  * @param {number} canvas_height
  * @param {number} max_particle_age
+ * @param {(string|Array)} starting_points - Either "ALL" or array of {x:x,y:y} coordinates
  */
-let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
+let ParticleFactory = (canvas_width, canvas_height, max_particle_age, starting_points) => {
 
 /**
  * Particle
@@ -40,20 +41,19 @@ let ParticleFactory = (canvas_width, canvas_height, max_particle_age) => {
     }
 
    /**
-    * Returns a new particle at a random location and with a random age
+    * Gives the  particle a random location and age
     */
-    static rand() {
-      // TODO:  needs to go to an actual point on a path
-      let x = rand_int(0, canvas_height-1);
-      let y = rand_int(0, canvas_height-1);
-      let age = rand_int(0, max_particle_age);
-      return new Particle(x, y, age);
-    }
-
     randomize() {
-      this.x = rand_int(0, canvas_height-1);
-      this.y = rand_int(0, canvas_width-1);
-      this.age = rand_int(0, max_particle_age);
+      if (starting_points === "ALL") {
+        this.x = rand_int(0, canvas_height-1);
+        this.y = rand_int(0, canvas_width-1);
+        this.age = rand_int(0, max_particle_age);
+      } else {
+        let starting_point = starting_points[rand_int(0, starting_points.length - 1)];
+        this.x = starting_point.x;
+        this.y = starting_point.y;
+        this.age = rand_int(0, max_particle_age);
+      }
     }
 
   /**
@@ -87,11 +87,12 @@ const fade = (ctx) => {
 /**
 *
 * @param {Array<Array<Vector>>} vector_field - vector field
+* @param {(string|Array)} starting_points - Either "ALL" or array of {x:x,y:y} coordinates
 * @param {HTMLCanvasElement} canvas - canvas
 * @param {Array} colors - canvas.  Should check if getContext('2d') before calling this function
 * @param {*} [options] - options
 */
-let angiogram = (vector_field, canvas, colors, options) => {
+let angiogram = (vector_field, starting_points, canvas, colors, options) => {
   // Options
   options = options || {};
   const fps = options.fps || 20;
@@ -110,13 +111,15 @@ let angiogram = (vector_field, canvas, colors, options) => {
   const canvas_width = canvas.width;
   const canvas_height = canvas.height;
   const ctx = canvas.getContext('2d');
-  const Particle = ParticleFactory(canvas_width, canvas_height, max_particle_age);
+  const Particle = ParticleFactory(canvas_width, canvas_height, max_particle_age, starting_points);
   const particles = [];
   let prev = null;
 
   // Initialize particles
   for (let i=0; i<num_particles; i++) {
-    particles.push(Particle.rand());
+    let p = new Particle(0,0,0);
+    p.randomize();
+    particles.push(p);
   }
 
 
@@ -140,7 +143,8 @@ let angiogram = (vector_field, canvas, colors, options) => {
         ctx.beginPath();
         ctx.lineCap = "round";
 
-        let [r,g,b] = colors[Math.round(particle.x/150 * 9)];
+        // let [r,g,b] = colors[Math.round(particle.x/canvas_width * 9)]; // TODO:
+        let [r,g,b] = colors[8]; // TODO:
         //ctx.strokeStyle = 'red';  // TODO: base it on magnitude
         // let relativeSpeed = getRelativeSpeed()
         // let strokeStyle = getColor(relativeSpeed, colors)

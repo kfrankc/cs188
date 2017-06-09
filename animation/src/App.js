@@ -24,10 +24,12 @@ class AppContainer extends Component {
     this.state = {
       dimensions: null,
       vector_field: null,
+      starting_points: null,
     };
   }
 
   componentDidMount() {
+    /*
     const vector_field = [];
     const canvas_width = 150;
     const canvas_height = 150;
@@ -44,46 +46,47 @@ class AppContainer extends Component {
       },
       vector_field: vector_field,
     })
-    /*
     */
 
-    /*
+
+
+
     const component = this;
-    axios.get('/field.json') // todo: public folder node env
+    axios.get('/test-all.json') // todo: public folder node env
       .then((response) => {
-        const v_field = response.data;
-        const width = v_field[0];
-        const height = v_field[1];
+        const vector_field = response.data.vector_field;
+        const starting_points = response.data.starting_points;
+        const width = vector_field.length;
+        const height = vector_field[0].length;
         component.setState({
           dimensions: {
-            width: width.length,
-            height: height.length,
-            f: angiogram(v_field, canvas, colors),
-          }
+            width: width,
+            height: height,
+          },
+          vector_field: vector_field,
+          starting_points: starting_points,
         })
       })
       .catch(function (error) {
         console.log(error);
       });
+    /*
     */
   }
 
   render() {
     // TODO: what is default?  need canvas rendered in order to get context
+    // TODO: better state check
     if (this.state.dimensions === null && this.state.vector_field === null) {
       return null;
     }
-    let a = <App
-        width={this.state.dimensions.width}
-        height={this.state.dimensions.height}
-        vector_field={this.state.vector_field}
-      />
 
     return (
       <App
         width={this.state.dimensions.width}
         height={this.state.dimensions.height}
         vector_field={this.state.vector_field}
+        starting_points={this.state.starting_points}
       />
     );
   }
@@ -101,7 +104,7 @@ class App extends Component {
     ctx.fillRect(10, 10, 50, 50);
     ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
     ctx.fillRect(30, 30, 50, 50);
-    angiogram(this.props.vector_field, canvas, colors);
+    angiogram(this.props.vector_field, this.props.starting_points, canvas, colors);
   }
 
   render() {
@@ -122,7 +125,10 @@ class App extends Component {
 }
 
 App.propTypes = {
+  //vector_field: PropTypes.arrayOf(PropTypes.array.isRequired).isRequired,
+  //starting_points: PropTypes.array,
   vector_field: PropTypes.arrayOf(PropTypes.array.isRequired).isRequired,
+  starting_points: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.array.isRequired]).isRequired, // TOOD: array of objects
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };
