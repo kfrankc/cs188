@@ -18,46 +18,34 @@ const colors = [
 ]
 
 
-const f = () => {
-    let canvas = document.getElementById('canvas');
-    let ctx = canvas.getContext('2d');
-    if (!canvas.getContext) {
-        // canvas-unsupported code here
-    }
-    const vector_field = [];
-    for(let x = 0; x < canvas.width; x++) {
-        vector_field.push([]);
-        for(let y = 0; y < canvas.height; y++) {
-            vector_field[x].push({ x: 1, y: 1 })
-        }
-    }
-    ctx.fillStyle = 'rgb(200, 0, 0)';
-    ctx.fillRect(10, 10, 50, 50);
-    ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
-    ctx.fillRect(30, 30, 50, 50);
-    angiogram(vector_field, canvas, colors);
-}
-
-
 class AppContainer extends Component {
-
-
   constructor(props) {
     super(props);
     this.state = {
       dimensions: null,
+      vector_field: null,
     };
   }
 
   componentDidMount() {
-
+    const vector_field = [];
+    const canvas_width = 150;
+    const canvas_height = 150;
+    for(let x = 0; x < canvas_width; x++) {
+        vector_field.push([]);
+        for(let y = 0; y < canvas_height; y++) {
+            vector_field[x].push({ x: 1, y: 1 })
+        }
+    }
     this.setState({
-      f: f,
       dimensions: {
         height: 150,
         width: 150,
-      }
+      },
+      vector_field: vector_field,
     })
+    /*
+    */
 
     /*
     const component = this;
@@ -66,15 +54,13 @@ class AppContainer extends Component {
         const v_field = response.data;
         const width = v_field[0];
         const height = v_field[1];
-        debugger
         component.setState({
           dimensions: {
             width: width.length,
             height: height.length,
+            f: angiogram(v_field, canvas, colors),
           }
         })
-        console.log(v_field[0][0]);
-        angiogram(v_field, canvas, colors);
       })
       .catch(function (error) {
         console.log(error);
@@ -84,22 +70,20 @@ class AppContainer extends Component {
 
   render() {
     // TODO: what is default?  need canvas rendered in order to get context
-    if (this.state.dimensions === null) {
+    if (this.state.dimensions === null && this.state.vector_field === null) {
       return null;
-      /*
-      return (
-        <App
-          width={150}
-          height={150}
-        />)
-      */
     }
+    let a = <App
+        width={this.state.dimensions.width}
+        height={this.state.dimensions.height}
+        vector_field={this.state.vector_field}
+      />
 
     return (
       <App
         width={this.state.dimensions.width}
         height={this.state.dimensions.height}
-        angiogram={this.state.f}
+        vector_field={this.state.vector_field}
       />
     );
   }
@@ -107,7 +91,17 @@ class AppContainer extends Component {
 
 class App extends Component {
   componentDidMount() {
-    this.props.angiogram();
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    if (!canvas.getContext) {
+        // canvas-unsupported code here
+    }
+
+    ctx.fillStyle = 'rgb(200, 0, 0)';
+    ctx.fillRect(10, 10, 50, 50);
+    ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
+    ctx.fillRect(30, 30, 50, 50);
+    angiogram(this.props.vector_field, canvas, colors);
   }
 
   render() {
@@ -128,7 +122,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  angiogram: PropTypes.func.isRequired,
+  vector_field: PropTypes.arrayOf(PropTypes.array.isRequired).isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };
