@@ -2,4 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './App';
 
-ReactDOM.render(<AppContainer />, document.getElementById('root'));
+// TODO: public folder node env
+ReactDOM.render(<AppContainer data_url="/test-all.json"/>,
+ document.getElementById('root'));

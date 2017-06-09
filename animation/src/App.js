@@ -29,29 +29,8 @@ class AppContainer extends Component {
   }
 
   componentDidMount() {
-    /*
-    const vector_field = [];
-    const canvas_width = 150;
-    const canvas_height = 150;
-    for(let x = 0; x < canvas_width; x++) {
-        vector_field.push([]);
-        for(let y = 0; y < canvas_height; y++) {
-            vector_field[x].push({ x: 1, y: 1 })
-        }
-    }
-    this.setState({
-      dimensions: {
-        height: 150,
-        width: 150,
-      },
-      vector_field: vector_field,
-    })
-    */
-
-
     const component = this;
-    //axios.get('/test-paths.json') // todo: public folder node env
-    axios.get('/data-paths.json') // todo: public folder node env
+    axios.get(this.props.data_url)
       .then((response) => {
         const vector_field = response.data.vector_field;
         const starting_points = response.data.starting_points;
@@ -89,6 +68,11 @@ class AppContainer extends Component {
       />
     );
   }
+}
+
+AppContainer.propTypes = {
+  // URL to json data
+  data_url: PropTypes.string.isRequired,
 }
 
 class App extends Component {
