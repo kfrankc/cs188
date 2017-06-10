@@ -173,25 +173,28 @@ def add_to_vec_field(coordinates, vectors, vec_field):
 
 
 def run():
-    with open('segments.json') as f:
-        segments = json.load(f)
-        segments = map(convert_frank_to_arvin, segments)
-        vectors_of_segments = map(get_vectors, segments)
+    width  = 1024 # TODO: this is set manually for now...
+    height = 1024
+    vec_field = init_vec_field(width,height)
+    with open('video1.json') as f:
+        frames = json.load(f)
+        #segments = frames[8]
+        #for i in range(1):
+        for segments in frames:
+            segments = map(convert_frank_to_arvin, segments)
+            vectors_of_segments = map(get_vectors, segments)
 
 
-        width  = 1024 # TODO: this is set manually for now...
-        height = 1024
 
 
-        # Init vec field with all (0,0)
-        vec_field = init_vec_field(width,height)
-        for segment, vectors_of_segment in zip(segments, vectors_of_segments):
-            add_to_vec_field(segment, vectors_of_segment, vec_field)
-        #write_to_json(vec_field, "vec1.json", indent=2)
+            # Init vec field with all (0,0)
+            for segment, vectors_of_segment in zip(segments, vectors_of_segments):
+                add_to_vec_field(segment, vectors_of_segment, vec_field)
+            #write_to_json(vec_field, "vec1.json", indent=2)
 
-        #format_to_file(vec_field, path_array, filename="data-paths.json", indent=1)
-        format_to_file(vec_field, get_starting_points(vec_field), filename="data-paths.json", indent=1)
-        format_to_file(vec_field, "ALL", filename="data-all.json", indent=1)
+    #format_to_file(vec_field, path_array, filename="data-paths.json", indent=1)
+    #format_to_file(vec_field, "ALL", filename="data-all.json", indent=1)
+    format_to_file(vec_field, get_starting_points(vec_field), filename="video1-paths.json", indent=1)
 
 
 

@@ -4,11 +4,11 @@ import AppContainer from './App';
 
 let options = {
     fps: 20,
-    num_particles: 100,
+    num_particles: 400,
     max_particle_age: 100,
 };
 
-let url = process.env.PUBLIC_URL + "/data-paths.json";
+let url = process.env.PUBLIC_URL + "/video1-paths.json";
 
 // TODO: public folder node env
 ReactDOM.render(<AppContainer data_url={url} options={options}/>,
