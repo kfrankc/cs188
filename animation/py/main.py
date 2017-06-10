@@ -4,6 +4,11 @@ import json
 from pprint import pprint
 
 
+def write_to_json(data, filename, indent=None):
+    with open(filename, "w") as output:
+        output.write(json.dumps(data, indent=indent))
+
+
 # Input: point= [x,y]
 # output: [y,x]
 def transpose_x_y(point):
@@ -100,9 +105,10 @@ def get_starting_points(vec_field):
     for x in range(len(vec_field)):
         for y in range(len(vec_field[x])):
             vec = vec_field[x][y]
-            x = vec['x']
-            y = vec['y']
-            if x==0 and y==0:
+            vecx = vec['x']
+            vecy = vec['y']
+
+            if vecx==0 and vecy==0:
                 continue
             else:
                 starting_points.append(create_point(x,y))
@@ -148,11 +154,6 @@ def format_to_file(vector_field, starting_points=None, filename="data.json", ind
         output.write(json.dumps(data, indent=indent))
 
 
-def write_to_json(data, filename, indent=None):
-    with open(filename, "w") as output:
-        output.write(json.dumps(data, indent=indent))
-
-
 def add_to_vec_field(coordinates, vectors, vec_field):
     """
     Input:
@@ -172,10 +173,10 @@ def add_to_vec_field(coordinates, vectors, vec_field):
 
 
 def run():
-    with open('path.json') as f:
-        path_array = json.load(f)
-        path_array = convert_frank_to_arvin(path_array)
-        vectors = get_vectors(path_array)
+    with open('segments.json') as f:
+        segments = json.load(f)
+        segments = map(convert_frank_to_arvin, segments)
+        vectors_of_segments = map(get_vectors, segments)
 
 
         width  = 1024 # TODO: this is set manually for now...
@@ -184,7 +185,9 @@ def run():
 
         # Init vec field with all (0,0)
         vec_field = init_vec_field(width,height)
-        add_to_vec_field(path_array, vectors, vec_field)
+        for segment, vectors_of_segment in zip(segments, vectors_of_segments):
+            add_to_vec_field(segment, vectors_of_segment, vec_field)
+        #write_to_json(vec_field, "vec1.json", indent=2)
 
         #format_to_file(vec_field, path_array, filename="data-paths.json", indent=1)
         format_to_file(vec_field, get_starting_points(vec_field), filename="data-paths.json", indent=1)
