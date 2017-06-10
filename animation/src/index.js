@@ -4,11 +4,11 @@ import AppContainer from './App';
 
 let options = {
     fps: 20,
-    num_particles: 20,
+    num_particles: 500,
     max_particle_age: 100,
 };
 
-let url = process.env.PUBLIC_URL + "/data-paths.json";
+let url = process.env.PUBLIC_URL + "/data-shifted-all.json";
 
 // TODO: public folder node env
 ReactDOM.render(<AppContainer data_url={url} options={options}/>,
