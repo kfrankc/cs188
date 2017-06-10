@@ -92,6 +92,24 @@ def init_vec_field(width, height):
 
     return vec_field
 
+def get_starting_points(vec_field):
+    """
+    """
+    
+    starting_points = []
+    for x in range(len(vec_field)):
+        for y in range(len(vec_field[x])):
+            vec = vec_field[x][y]
+            x = vec['x']
+            y = vec['y']
+            if x==0 and y==0:
+                continue
+            else:
+                starting_points.append(create_point(x,y))
+
+    return starting_points
+
+
 def shift_points(points, x_delta, y_delta):
     """
         Input: array of points: [{x:x, y:y},{}]
@@ -160,7 +178,6 @@ def run():
         vectors = get_vectors(path_array)
 
 
-
         width  = 1024 # TODO: this is set manually for now...
         height = 1024
 
@@ -169,13 +186,25 @@ def run():
         vec_field = init_vec_field(width,height)
         add_to_vec_field(path_array, vectors, vec_field)
 
-        for i in range(10):
-            new_path = shift_points(path_array, -1*i, -1*i)
-            add_to_vec_field(new_path, get_vectors(new_path), vec_field)
-
         #format_to_file(vec_field, path_array, filename="data-paths.json", indent=1)
-        #format_to_file(vec_field, "ALL", filename="data-all.json", indent=1)
-        format_to_file(vec_field, "ALL", filename="data-shifted-all.json", indent=1)
+        format_to_file(vec_field, get_starting_points(vec_field), filename="data-paths.json", indent=1)
+        format_to_file(vec_field, "ALL", filename="data-all.json", indent=1)
+
+
+
+        # left
+        #for i in range(5):
+            #new_path = shift_points(path_array, -1*i, 0)
+            #add_to_vec_field(new_path, get_vectors(new_path), vec_field)
+        # right
+        #for i in range(5):
+            #new_path = shift_points(path_array, i, 0)
+            #add_to_vec_field(new_path, get_vectors(new_path), vec_field)
+        # up
+        #for i in range(10):
+            #new_path = shift_points(path_array, 0, -i+1)
+            #add_to_vec_field(new_path, get_vectors(new_path), vec_field)
+
 
         #write_to_json(path_array, "corrected-path.json", indent=2)
         #write_to_json(get_vectors(shift_points(path_array, -1, -1)), "corrected-path.shifted.json", indent=2)
