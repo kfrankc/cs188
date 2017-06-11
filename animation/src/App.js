@@ -101,14 +101,15 @@ class App extends Component {
     );
 
     // Start event listener for hover
-    /*
     const onKeyDown = (e) => {
       if(e.ctrlKey) {
         window.addEventListener('mousemove', this.onMouseMove);
       }
+      /*
       if(e.shiftKey) {
         window.addEventListener('mousemove', this.onMouseMoveShift);
       }
+      */
     }
     const onKeyUp = (e) => {
       if(!e.ctrlKey) {
@@ -116,14 +117,17 @@ class App extends Component {
         overlay.style.display = "none";
         window.removeEventListener('mousemove', this.onMouseMove);
       }
-      if(!e.ctrlKey) {
+      /*
+      if(!e.shiftKey) {
         const background = document.querySelector('#canvas-hidden-bg');
         background.style.display = "none";
         window.removeEventListener('mousemove', this.onMouseMoveShift);
       }
+      */
     }
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
+    /*
     */
   }
 
@@ -148,7 +152,7 @@ class App extends Component {
     let overlay_style = {
         width: this.props.width,
         height: this.props.height,
-        background: `url(${process.env.PUBLIC_URL + "/overlay.png"})`,
+        background: `url(${process.env.PUBLIC_URL + "/angiogram.gif"})`,
     }
 
     let background_style = {
@@ -159,7 +163,7 @@ class App extends Component {
 
     return (
       <div className="canvas-container">
-        {/*<div id="canvas-overlay" style={overlay_style}></div>*/}
+        <div id="canvas-overlay" style={overlay_style}></div>
         <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
         <div className="background-overlay" style={style}></div>
         <div id="canvas-background" style={background_style}></div>

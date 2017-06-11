@@ -4,7 +4,7 @@ import AppContainer from './App';
 
 let options = {
     fps: 20,
-    num_particles: 800,
+    num_particles: 1000,
     max_particle_age: 100,
 };
 
