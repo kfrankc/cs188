@@ -120,7 +120,7 @@ let angiogram = (vector_field, starting_points, canvas, colors, options) => {
    */
   const fade = (ctx) => {
       ctx.save();
-      ctx.globalAlpha = 0.1;
+      ctx.globalAlpha = 0.08;
       ctx.globalCompositeOperation='destination-out';
       ctx.fillStyle= '#FFF';
       ctx.fillRect(0,0,canvas_width, canvas_height);
