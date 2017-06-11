@@ -206,9 +206,15 @@ def get_magnitude(i):
 def get_points_to_explore(start_x, start_y, side_length, x_bound, y_bound):
     """
     print out values at side_length = 3 to understand
+
+
+    unfinished
+    doing spiral generator would probably be better
     """
     if side_length < 3:
         raise Exception("side_length must be greater than 3")
+    if side_length%2 == 0:
+        raise Exception("side_length must be odd")
 
     points = []
 
@@ -225,13 +231,16 @@ def get_points_to_explore(start_x, start_y, side_length, x_bound, y_bound):
     for i in range(side_length-1):
         points.append((side_length-1-i, 0))
 
+    points = map(lambda (x,y): (x+start_x, y+start_y), points)
+
 
     return points
 
-print(get_points_to_explore(None, None, 3, None, None))
-exit()
 
 def find_nearest_neighbor(point_x, point_y, vector_field, predicate_fn):
+    """
+    unfinished
+    """
     width = len(vector_field)
     height = len(vector_field[0])
 
