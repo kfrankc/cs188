@@ -108,6 +108,8 @@ class App extends Component {
     }
     const onKeyUp = (e) => {
       if(!e.ctrlKey) {
+        const overlay = document.querySelector('#canvas-overlay');
+        overlay.style.display = "none";
         window.removeEventListener('mousemove', this.onMouseMove);
       }
     }
@@ -118,6 +120,7 @@ class App extends Component {
   onMouseMove(e) {
     const overlay = document.querySelector('#canvas-overlay');
     overlay.style.webkitMaskPosition = `${e.pageX-75}px ${e.pageY-75}px`;
+    overlay.style.display = "inline-block";
   }
 
   render() {

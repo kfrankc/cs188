@@ -20,7 +20,7 @@
   mask-size: 150px;
 
   /* comment out to show */
-  /*display: none;*/
+  display: none;
 }
 
 canvas {
