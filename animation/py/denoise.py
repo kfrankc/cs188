@@ -69,7 +69,19 @@ for i, image in enumerate(frames):
 
 
         # percentile threshold
-        per_thresh = threshold_percentile(image, 0.040)
+        per_thresh = threshold_percentile(image, 0.050)
+        if i == 11: # hardcoded
+            per_thresh = threshold_percentile(image, 0.010)
+        if i == 12: # hardcoded
+            per_thresh = threshold_percentile(image, 0.010)
+        if i == 13: # hardcoded
+            per_thresh = threshold_percentile(image, 0.010)
+        if i == 14: # hardcoded
+            per_thresh = threshold_percentile(image, 0.010)
+        if i == 15: # hardcoded
+            per_thresh = threshold_percentile(image, 0.010)
+        if i == 18: # hardcoded
+            per_thresh = threshold_percentile(image, 0.090)
         per_thresh = min(per_thresh, 600)
 	percentile = image > per_thresh
         a = ax[1, 0]
@@ -183,9 +195,20 @@ plt.axis('off')
 plt.savefig("out/total.png")
 #plt.show()
 
+json_total = []
+for r in range(len(total)):
+    json_total.append([])
+    for c in range(len(total[r])):
+        if total[r][c] == True: # White
+            json_total[r].append(0)
+        else: # black
+            json_total[r].append(1)
+
+
 with open("total.json", "w") as output:
-    output.write(json.dumps(total, indent=2))
+    output.write(json.dumps(json_total, indent=2))
 
 
 
 
+# higher threshold => more intensity allowed => more white shown
