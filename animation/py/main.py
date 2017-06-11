@@ -203,20 +203,47 @@ def get_magnitude(i):
 
     return d[i]
 
+def truncate(x, y, boundx, boundy):
+    """
+    inclusive bound
+    """
+
+    if x < 0:
+        x = 0
+    if boundx < x:
+        x = boundx
+    if y < 0:
+        y = 0
+    if boundy < y:
+        y = boundy
+
+    return (x,y)
+
 def get_points_to_explore(start_x, start_y, side_length, x_bound, y_bound):
     """
+    input: 
+        bound: inclusive
+
     print out values at side_length = 3 to understand
 
 
     unfinished
     doing spiral generator would probably be better
     """
-    if side_length < 3:
-        raise Exception("side_length must be greater than 3")
+    if side_length <= 0:
+        raise Exception("side_length must be greater than 0")
     if side_length%2 == 0:
         raise Exception("side_length must be odd")
 
+    if side_length == 1:
+        return (start_x, start_y)
+
     points = []
+
+    midx = int(side_length/2)  # mid point of rectangle placed at origin
+    midy = int(side_length/2)
+    shift_x = start_x - midx
+    shift_y = start_y - midy
 
     # start at origin (bottom left). go up. stop before top left
     for i in range(side_length-1):
@@ -231,10 +258,17 @@ def get_points_to_explore(start_x, start_y, side_length, x_bound, y_bound):
     for i in range(side_length-1):
         points.append((side_length-1-i, 0))
 
-    points = map(lambda (x,y): (x+start_x, y+start_y), points)
+    # Shift from origin to start point
+    points = map(lambda (x,y): (x + shift_x, y + shift_y), points)
 
+    # Truncate values that go out of bounds
+    points = map(lambda (x,y): truncate(x,y, x_bound, y_bound), points)
 
+    # Remove duplicates
+    points = list(set(points))
     return points
+
+#print(get_points_to_explore(0,0, 5, 10, 10))
 
 
 def find_nearest_neighbor(point_x, point_y, vector_field, predicate_fn):
