@@ -2,7 +2,7 @@
 from __future__ import print_function
 import json
 from pprint import pprint
-
+from copy import deepcopy
 
 def write_to_json(data, filename, indent=None):
     with open(filename, "w") as output:
@@ -236,7 +236,7 @@ def get_points_to_explore(start_x, start_y, side_length, x_bound, y_bound):
         raise Exception("side_length must be odd")
 
     if side_length == 1:
-        return (start_x, start_y)
+        return [(start_x, start_y)]
 
     points = []
 
@@ -270,6 +270,12 @@ def get_points_to_explore(start_x, start_y, side_length, x_bound, y_bound):
 
 #print(get_points_to_explore(0,0, 5, 10, 10))
 
+def predicate_fn(x, y, vector_field):
+    if vector_field[x][y]['x'] == 0 and vector_field[x][y]['y'] == 0:
+        return False
+    else:
+        return True
+
 
 def find_nearest_neighbor(point_x, point_y, vector_field, predicate_fn):
     """
@@ -278,10 +284,10 @@ def find_nearest_neighbor(point_x, point_y, vector_field, predicate_fn):
     width = len(vector_field)
     height = len(vector_field[0])
 
-    for i in range(3, 100):
+    for i in range(1, 41, 2):  # hardcode
         points_to_explore = get_points_to_explore(point_x, point_y, i, width, height)
-        for (x,y) in points_to_explore:
-            if predicate_fn(vector_field, x, y):
+        for x,y in points_to_explore:
+            if predicate_fn(x, y, vector_field) == True:
                 return (x,y)
 
     return None
@@ -307,6 +313,11 @@ def run():
             for segment, vectors_of_segment in zip(segments, vectors_of_segments):
                 add_to_vec_field(segment, vectors_of_segment, vec_field)
             #write_to_json(vec_field, "vec1.json", indent=2)
+
+
+    print('here')
+    vec_field = add_width(vec_field)
+
 
     #format_to_file(vec_field, path_array, filename="data-paths.json", indent=1)
     #format_to_file(vec_field, "ALL", filename="data-all.json", indent=1)
@@ -336,7 +347,31 @@ def test_data():
     format_to_file(vector_field, starting_points, filename="test-paths.json", indent=1)
     #format_to_file(vector_field, "ALL", filename="test-all.json", indent=1)
 
+
+def add_width(truth_vec_field):
+    new_vec_field = deepcopy(truth_vec_field)
+
+    with open('total.json') as total_file:
+        # total.json is image binarized with 1 if there is a path there.  row column format
+        total = json.load(total_file)
+        for r in range(len(total)):
+            for c in range(len(total)):
+                x = c
+                y = r
+                if total[x][y] == 0 and total[x][y] == 0:
+                    continue
+
+                nearest_neighber = find_nearest_neighbor(x,y, truth_vec_field, predicate_fn)
+                if nearest_neighber:
+                    copy_vec = deepcopy(truth_vec_field[x][y]) # deepcopy not needed?
+                    new_vec_field[x][y] = copy_vec
+                else:
+                    # do nothing because it should already be 0, 0 there
+                    pass
+
+    return new_vec_field
+
+
     
-#test_data()
 run()
 
