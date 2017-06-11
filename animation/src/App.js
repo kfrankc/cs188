@@ -105,12 +105,20 @@ class App extends Component {
       if(e.ctrlKey) {
         window.addEventListener('mousemove', this.onMouseMove);
       }
+      if(e.shiftKey) {
+        window.addEventListener('mousemove', this.onMouseMoveShift);
+      }
     }
     const onKeyUp = (e) => {
       if(!e.ctrlKey) {
         const overlay = document.querySelector('#canvas-overlay');
         overlay.style.display = "none";
         window.removeEventListener('mousemove', this.onMouseMove);
+      }
+      if(!e.ctrlKey) {
+        const background = document.querySelector('#canvas-hidden-bg');
+        background.style.display = "none";
+        window.removeEventListener('mousemove', this.onMouseMoveShift);
       }
     }
     window.addEventListener('keydown', onKeyDown);
@@ -121,6 +129,12 @@ class App extends Component {
     const overlay = document.querySelector('#canvas-overlay');
     overlay.style.webkitMaskPosition = `${e.pageX-75}px ${e.pageY-75}px`;
     overlay.style.display = "inline-block";
+  }
+
+  onMouseMoveShift(e) {
+    const background = document.querySelector('#canvas-hidden-bg');
+    background.style.webkitMaskPosition = `${e.pageX-75}px ${e.pageY-75}px`;
+    background.style.display = "inline-block";
   }
 
   render() {
@@ -137,9 +151,9 @@ class App extends Component {
 
     return (
       <div className="canvas-container">
-        <div id="canvas-overlay" style={overlay_style}>
-        </div>
+        <div id="canvas-overlay" style={overlay_style}></div>
         <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
+        <div id="canvas-hidden-bg" style={overlay_style}></div>
         <div id="canvas-background" style={style}
         ></div>
       </div>
