@@ -285,7 +285,7 @@ def find_nearest_neighbor(point_x, point_y, vector_field, predicate_fn):
     height = len(vector_field[0])
 
     for i in range(1, 41, 2):  # hardcode
-        points_to_explore = get_points_to_explore(point_x, point_y, i, width, height)
+        points_to_explore = get_points_to_explore(point_x, point_y, i, width-1, height-1)
         for x,y in points_to_explore:
             if predicate_fn(x, y, vector_field) == True:
                 return (x,y)
@@ -350,6 +350,7 @@ def test_data():
 
 def add_width(truth_vec_field):
     new_vec_field = deepcopy(truth_vec_field)
+    count = 0
 
     with open('total.json') as total_file:
         # total.json is image binarized with 1 if there is a path there.  row column format
@@ -360,6 +361,9 @@ def add_width(truth_vec_field):
                 y = r
                 if total[x][y] == 0 and total[x][y] == 0:
                     continue
+                count += 1
+                if (count % 2000 == 0):
+                    print(count)
 
                 nearest_neighber = find_nearest_neighbor(x,y, truth_vec_field, predicate_fn)
                 if nearest_neighber:
@@ -369,6 +373,7 @@ def add_width(truth_vec_field):
                     # do nothing because it should already be 0, 0 there
                     pass
 
+    print(count)
     return new_vec_field
 
 
