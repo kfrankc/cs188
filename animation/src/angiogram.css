@@ -48,9 +48,20 @@ canvas {
   bottom: 0px;
 }
 
+.background-overlay {
+  /* width: set to be the same as canvas width by react */
+  /* height: set to be the same as canvas width by react */
+  background:rgba(0,0,0,0.7);
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  z-index: -1;
+}
+
+
 #canvas-background {
-  width: 150px;  /* must be same as canvas width */
-  height: 150px; /* must be same as canvas width */
+  /* width: set to be the same as canvas width by react */
+  /* height: set to be the same as canvas width by react */
   border: solid 1px brown;
   background: black;
   position: absolute;

@@ -151,11 +151,18 @@ class App extends Component {
         background: `url(${process.env.PUBLIC_URL + "/overlay.png"})`,
     }
 
+    let background_style = {
+        width: this.props.width,
+        height: this.props.height,
+        background: `url(${process.env.PUBLIC_URL + "/angiogram.gif"})`,
+    }
+
     return (
       <div className="canvas-container">
-        <div id="canvas-overlay" style={overlay_style}></div>
+        {/*<div id="canvas-overlay" style={overlay_style}></div>*/}
         <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
-        <div id="canvas-background" style={style}></div>
+        <div className="background-overlay" style={style}></div>
+        <div id="canvas-background" style={background_style}></div>
       </div>
     );
   }

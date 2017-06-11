@@ -258,7 +258,7 @@ def run():
     width  = 1024 # TODO: this is set manually for now...
     height = 1024
     vec_field = init_vec_field(width,height)
-    with open('video2.json') as f:
+    with open('video.json') as f:
         frames = json.load(f)
         #segments = frames[8]
         #for i in range(1):
@@ -276,7 +276,7 @@ def run():
 
     #format_to_file(vec_field, path_array, filename="data-paths.json", indent=1)
     #format_to_file(vec_field, "ALL", filename="data-all.json", indent=1)
-    format_to_file(vec_field, get_starting_points(vec_field), filename="video1-paths.json", indent=1)
+    format_to_file(vec_field, get_starting_points(vec_field), filename="data-paths.json", indent=1)
 
 
 

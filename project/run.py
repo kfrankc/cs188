@@ -70,7 +70,7 @@ for frame in pixel_array:
 	# Save; note: convert -delay 20 -loop 0 *png skeleton.gif converts to gif
 	plt.axis('off')
 	plt.imshow(skeleton, cmap=plt.cm.bone, aspect='auto')
-	fig.savefig('./img'+ str(img_id) + '/' + str(i) + '.png', transparent=True)
+	fig.savefig('./out/'+ str(img_id) + '/' + str(i) + '.png', transparent=True)
 	plt.pause(.1)
 	plt.draw()
 
