@@ -6,16 +6,21 @@
 }
 
 #canvas-overlay {
-  width: 150px;  /* must be same as canvas width */
-  height: 150px; /* must be same as canvas width */
+  /* width: set to be the same as canvas width by react */
+  /* height: set to be the same as canvas width by react */
   border: solid 1px brown;
-  background: blue;
+  /*background: blue;*/
   position: absolute;
   top: 0px;
   bottom: 0px;
-  z-index: 1;
+  z-index: 1;   /* make sure it's on top of canvas */
 
-  display: none; /* comment out to show */
+  mask-image: url('http://i.imgur.com/ESjdWuj.png');
+  mask-repeat: no-repeat;
+  mask-size: 150px;
+
+  /* comment out to show */
+  /*display: none;*/
 }
 
 canvas {

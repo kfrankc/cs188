@@ -92,12 +92,32 @@ class App extends Component {
     ctx.fillRect(30, 30, 50, 50);
 
 
+    // Start animating
     angiogram(this.props.vector_field,
       this.props.starting_points,
       canvas,
       colors,
       this.props.options,
     );
+
+    // Start event listener for hover
+    const onKeyDown = (e) => {
+      if(e.ctrlKey) {
+        window.addEventListener('mousemove', this.onMouseMove);
+      }
+    }
+    const onKeyUp = (e) => {
+      if(!e.ctrlKey) {
+        window.removeEventListener('mousemove', this.onMouseMove);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+  }
+
+  onMouseMove(e) {
+    const overlay = document.querySelector('#canvas-overlay');
+    overlay.style.webkitMaskPosition = `${e.pageX-75}px ${e.pageY-75}px`;
   }
 
   render() {
@@ -106,9 +126,16 @@ class App extends Component {
       height: this.props.height,
     }
 
+    let overlay_style = {
+        width: this.props.width,
+        height: this.props.height,
+    }
+
     return (
       <div className="canvas-container">
-        <div id="canvas-overlay" style={style}></div>
+        <div id="canvas-overlay" style={overlay_style}>
+          <img src={process.env.PUBLIC_URL + "/overlay.png"} />
+        </div>
         <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
         <div id="canvas-background" style={style}
         ></div>
