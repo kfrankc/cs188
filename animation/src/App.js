@@ -154,8 +154,7 @@ class App extends Component {
         <div id="canvas-overlay" style={overlay_style}></div>
         <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
         <div id="canvas-hidden-bg" style={overlay_style}></div>
-        <div id="canvas-background" style={style}
-        ></div>
+        <div id="canvas-background" style={style}></div>
       </div>
     );
   }
