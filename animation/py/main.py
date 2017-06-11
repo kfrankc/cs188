@@ -181,27 +181,68 @@ def get_magnitude(i):
          3: 1,
          4: 1,
          5: 1,
-         6: 1,
-         7: 1,
-         8: 1,
-         9: 1,
-        10: 1,
-        11: 1,
+         6: 3,
+         7: 2,
+         8: 2,
+         9: 2,
+        10: 2,
+        11: 2,
         12: 1,
         13: 1,
         14: 1,
         15: 1,
         16: 1,
-        17: 1,
-        18: 1,
-        19: 1,
-        20: 1,
-        21: 1,
-        22: 1,
+        17: 2,
+        18: 2,
+        19: 2,
+        20: 2,
+        21: 2,
+        22: 2,
         23: 1,
     }
 
     return d[i]
+
+def get_points_to_explore(start_x, start_y, side_length, x_bound, y_bound):
+    """
+    print out values at side_length = 3 to understand
+    """
+    if side_length < 3:
+        raise Exception("side_length must be greater than 3")
+
+    points = []
+
+    # start at origin (bottom left). go up. stop before top left
+    for i in range(side_length-1):
+        points.append((0, i))
+    # start at top left. go right. stop before top right
+    for i in range(side_length-1):
+        points.append((i, side_length-1))
+    # start at top right. go down. stop before bottom right
+    for i in range(side_length-1):
+        points.append((side_length-1, side_length-1-i))
+    # start at bottom right. go left. stop before origin (bottom left)
+    for i in range(side_length-1):
+        points.append((side_length-1-i, 0))
+
+
+    return points
+
+print(get_points_to_explore(None, None, 3, None, None))
+exit()
+
+def find_nearest_neighbor(point_x, point_y, vector_field, predicate_fn):
+    width = len(vector_field)
+    height = len(vector_field[0])
+
+    for i in range(3, 100):
+        points_to_explore = get_points_to_explore(point_x, point_y, i, width, height)
+        for (x,y) in points_to_explore:
+            if predicate_fn(vector_field, x, y):
+                return (x,y)
+
+    return None
+
 
 
 def run():
