@@ -101,6 +101,7 @@ class App extends Component {
     );
 
     // Start event listener for hover
+    /*
     const onKeyDown = (e) => {
       if(e.ctrlKey) {
         window.addEventListener('mousemove', this.onMouseMove);
@@ -123,6 +124,7 @@ class App extends Component {
     }
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
+    */
   }
 
   onMouseMove(e) {
@@ -153,7 +155,6 @@ class App extends Component {
       <div className="canvas-container">
         <div id="canvas-overlay" style={overlay_style}></div>
         <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
-        <div id="canvas-hidden-bg" style={overlay_style}></div>
         <div id="canvas-background" style={style}></div>
       </div>
     );
