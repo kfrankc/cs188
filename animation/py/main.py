@@ -349,31 +349,34 @@ def test_data():
 
 
 def add_width(truth_vec_field):
+    write_to_json(truth_vec_field, "vec-no-width.json", indent=2)
     new_vec_field = deepcopy(truth_vec_field)
     count = 0
+    num_found = 1
 
     with open('total.json') as total_file:
         # total.json is image binarized with 1 if there is a path there.  row column format
         total = json.load(total_file)
         for r in range(len(total)):
             for c in range(len(total)):
-                x = c
+                x = c # translate coordinates in total.json
                 y = r
-                if total[x][y] == 0 and total[x][y] == 0:
+                if total[r][c] == 0 and total[r][c] == 0:
                     continue
                 count += 1
                 if (count % 2000 == 0):
-                    print(count)
+                    print("count: ", count)
 
-                nearest_neighber = find_nearest_neighbor(x,y, truth_vec_field, predicate_fn)
-                if nearest_neighber:
-                    copy_vec = deepcopy(truth_vec_field[x][y]) # deepcopy not needed?
+                nearest_neighbor = find_nearest_neighbor(x,y, truth_vec_field, predicate_fn)
+                if nearest_neighbor:
+                    neighbor_x, neighbor_y = nearest_neighbor
+                    copy_vec = deepcopy(truth_vec_field[neighbor_x][neighbor_y]) # deepcopy not needed?
                     new_vec_field[x][y] = copy_vec
-                else:
-                    # do nothing because it should already be 0, 0 there
+                    #print("({},{})  |  ({},{})".format(x,y, truth_vec_field[x][y]['x'], truth_vec_field[x][y]['y']))
+                else: # do nothing because it should already be 0, 0 there
                     pass
 
-    print(count)
+    write_to_json(new_vec_field, "vec-width.json", indent=2)
     return new_vec_field
 
 
