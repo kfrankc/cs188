@@ -42,10 +42,11 @@ def convert_frank_to_arvin(path_array):
     transposed = map(transpose_x_y, path_array)
     return map(tuple_to_dict, transposed)
 
-def create_vector(x,y):
+def create_vector(x,y,m=0):
     return {
         "x": x,
         "y": y,
+        "m": m,
     }
 
 def create_point(x,y):
@@ -71,17 +72,17 @@ def get_y(point):
 
 # Input: array of points
 # output: array of vectors to the next point # TODO
-def get_vectors(path_array):
+def get_vectors(path_array, m=1):
     vectors = []
     for i in range(len(path_array)):
         # check for last pixel of segment
         # segment ended. vector to nowhere...
         if i == len(path_array) - 1: 
-            vectors.append(create_vector(0,0))
+            vectors.append(create_vector(0,0,0))
         else:
             x1, y1 = get_x(path_array[i]), get_y(path_array[i])
             x2, y2 = get_x(path_array[i+1]), get_y(path_array[i+1])
-            vectors.append(create_vector(x2-x1, y2-y1))
+            vectors.append(create_vector(x2-x1, y2-y1, m))
     return vectors
 
 def init_vec_field(width, height):
@@ -93,7 +94,7 @@ def init_vec_field(width, height):
     for x in range(width):
         vec_field.append([])
         for y in range(height):
-            vec_field[x].append(create_vector(0,0))
+            vec_field[x].append(create_vector(0,0,1))
 
     return vec_field
 
@@ -171,16 +172,47 @@ def add_to_vec_field(coordinates, vectors, vec_field):
         y = get_y(point)
         vec_field[x][y] = vectors[i]
 
+def get_magnitude(i):
+    # heuristic
+    d = {
+         0: 1,
+         1: 1,
+         2: 1,
+         3: 1,
+         4: 1,
+         5: 1,
+         6: 1,
+         7: 1,
+         8: 1,
+         9: 1,
+        10: 1,
+        11: 1,
+        12: 1,
+        13: 1,
+        14: 1,
+        15: 1,
+        16: 1,
+        17: 1,
+        18: 1,
+        19: 1,
+        20: 1,
+        21: 1,
+        22: 1,
+        23: 1,
+    }
+
+    return d[i]
+
 
 def run():
     width  = 1024 # TODO: this is set manually for now...
     height = 1024
     vec_field = init_vec_field(width,height)
-    with open('video1.json') as f:
+    with open('video2.json') as f:
         frames = json.load(f)
         #segments = frames[8]
         #for i in range(1):
-        for segments in frames:
+        for i,segments in enumerate(frames):
             segments = map(convert_frank_to_arvin, segments)
             vectors_of_segments = map(get_vectors, segments)
 
@@ -198,23 +230,12 @@ def run():
 
 
 
-        # left
-        #for i in range(5):
-            #new_path = shift_points(path_array, -1*i, 0)
-            #add_to_vec_field(new_path, get_vectors(new_path), vec_field)
-        # right
-        #for i in range(5):
-            #new_path = shift_points(path_array, i, 0)
-            #add_to_vec_field(new_path, get_vectors(new_path), vec_field)
-        # up
-        #for i in range(10):
-            #new_path = shift_points(path_array, 0, -i+1)
-            #add_to_vec_field(new_path, get_vectors(new_path), vec_field)
-
 
         #write_to_json(path_array, "corrected-path.json", indent=2)
         #write_to_json(get_vectors(shift_points(path_array, -1, -1)), "corrected-path.shifted.json", indent=2)
         #write_to_json(shift_points(path_array, -1, -1), "corrected-path.shifted.json", indent=2)
+
+
 
 def test_data():
     n = 150

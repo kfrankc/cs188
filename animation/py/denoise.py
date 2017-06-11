@@ -69,7 +69,7 @@ for i, image in enumerate(frames):
 
 
         # percentile threshold
-        per_thresh = threshold_percentile(image, 0.065)
+        per_thresh = threshold_percentile(image, 0.040)
         per_thresh = min(per_thresh, 600)
 	percentile = image > per_thresh
         a = ax[1, 0]
@@ -85,7 +85,17 @@ for i, image in enumerate(frames):
         a.axis('off')
 
 
+
+
+
+
         total += med
+
+
+
+
+
+
 
 
 	#binary = median > 0
@@ -172,6 +182,9 @@ plt.imshow(total, cmap = plt.get_cmap('gray'))
 plt.axis('off')
 plt.savefig("out/total.png")
 #plt.show()
+
+with open("total.json", "w") as output:
+    output.write(json.dumps(total, indent=2))
 
 
 
