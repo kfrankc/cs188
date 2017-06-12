@@ -96,7 +96,6 @@ class App extends Component {
     */
 
 
-    /*
     // Start animating
     angiogram(this.props.vector_field,
       this.props.starting_points,
@@ -104,7 +103,6 @@ class App extends Component {
       colors,
       this.props.options,
     );
-    */
 
     // Start event listener for hover
     const onKeyDown = (e) => {
