@@ -1,8 +1,8 @@
 .canvas-container {
   position: relative;
   display: inline-block;
-  width: 150px;  /* must be same as canvas width */
-  height: 150px; /* must be same as canvas width */
+  /* width: set to be the same as canvas width by react */
+  /* height: set to be the same as canvas width by react */
 }
 
 #canvas-overlay {
@@ -82,7 +82,7 @@ canvas {
 .message2 {
   position: fixed;
   top: 20px;
-  right: 20px;
+  left: 800px;
   width: 200px;
   color: #D9D9D9;
   opacity: 0.8;
