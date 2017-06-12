@@ -96,6 +96,7 @@ class App extends Component {
     */
 
 
+    /*
     // Start animating
     angiogram(this.props.vector_field,
       this.props.starting_points,
@@ -103,6 +104,7 @@ class App extends Component {
       colors,
       this.props.options,
     );
+    */
 
     // Start event listener for hover
     const onKeyDown = (e) => {
@@ -157,7 +159,7 @@ class App extends Component {
         width: this.props.width,
         height: this.props.height,
         background: `url(${process.env.PUBLIC_URL + "/angiogram.gif"})`,
-        webkitMaskImage: `url(${process.env.PUBLIC_URL + "/mask.png"})`,
+        WebkitMaskImage: `url(${process.env.PUBLIC_URL + "/mask.png"})`,
     }
 
     let background_style = {

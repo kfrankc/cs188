@@ -1,6 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 .canvas-container {
   position: relative;
-  display: inline-block;
+  display: block;
   /* width: set to be the same as canvas width by react */
   /* height: set to be the same as canvas width by react */
 }
@@ -8,14 +17,12 @@
 #canvas-overlay {
   /* width: set to be the same as canvas width by react */
   /* height: set to be the same as canvas width by react */
-  border: solid 1px brown;
   /*background: blue;*/
   position: absolute;
   top: 0px;
   bottom: 0px;
   z-index: 1;   /* make sure it's on top of canvas */
 
-  mask-image: url('http://i.imgur.com/ESjdWuj.png');
   mask-repeat: no-repeat;
   mask-size: 150px;
 
@@ -26,7 +33,6 @@
 #canvas-hidden-bg {
   /* width: set to be the same as canvas width by react */
   /* height: set to be the same as canvas width by react */
-  border: solid 1px brown;
   /*background: blue;*/
   position: absolute;
   top: 0px;
@@ -41,7 +47,6 @@
 }
 
 canvas {
-  border: 1px solid black;
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -61,7 +66,6 @@ canvas {
 #canvas-background {
   /* width: set to be the same as canvas width by react */
   /* height: set to be the same as canvas width by react */
-  border: solid 1px brown;
   background: black;
   position: absolute;
   top: 0px;
