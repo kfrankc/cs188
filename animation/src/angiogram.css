@@ -33,7 +33,6 @@
   bottom: 0px;
   z-index: -1;   /* make sure it's below canvas */
 
-  mask-image: url('http://i.imgur.com/ESjdWuj.png');
   mask-repeat: no-repeat;
   mask-size: 150px;
 

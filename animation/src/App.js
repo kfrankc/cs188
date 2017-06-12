@@ -157,6 +157,7 @@ class App extends Component {
         width: this.props.width,
         height: this.props.height,
         background: `url(${process.env.PUBLIC_URL + "/angiogram.gif"})`,
+        webkitMaskImage: `url(${process.env.PUBLIC_URL + "/mask.png"})`,
     }
 
     let background_style = {
