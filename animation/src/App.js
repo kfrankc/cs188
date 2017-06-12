@@ -56,7 +56,10 @@ class AppContainer extends Component {
     // TODO: what is default?  need canvas rendered in order to get context
     // TODO: better state check
     if (this.state.dimensions === null && this.state.vector_field === null) {
-      return null;
+      return <div>
+        <p>Loading.... this make take a while</p>
+          <img alt="loading-icon" className="loading-icon" src={`${process.env.PUBLIC_URL + "/loading.gif"}`} />
+        </div>
     }
 
     return (
@@ -80,16 +83,17 @@ AppContainer.propTypes = {
 class App extends Component {
   componentDidMount() {
     let canvas = document.getElementById('canvas');
-    let ctx = canvas.getContext('2d');
     if (!canvas.getContext) {
         // canvas-unsupported code here
     }
 
     // DEBUG
+    /*
     ctx.fillStyle = 'rgb(200, 0, 0)';
     ctx.fillRect(10, 10, 50, 50);
     ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
     ctx.fillRect(30, 30, 50, 50);
+    */
 
 
     // Start animating
@@ -163,6 +167,10 @@ class App extends Component {
 
     return (
       <div className="canvas-container">
+        <a href="http://kfrankc.me/cs188/">
+          <img alt="home" className="home-button" src={`${process.env.PUBLIC_URL + "/home.png"}`} />
+        </a>
+        <div className="message2">Hold CTRL key and hover to see the angiogram</div>
         <div id="canvas-overlay" style={overlay_style}></div>
         <canvas id="canvas" width={this.props.width} height={this.props.height}></canvas>
         <div className="background-overlay" style={style}></div>

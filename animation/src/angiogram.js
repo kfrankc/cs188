@@ -156,7 +156,6 @@ let angiogram = (vector_field, starting_points, canvas, colors, options) => {
 
 
         ctx.moveTo(particle.x, particle.y);
-        let v = vector_field;
         let new_x = particle.x + vector_field[particle.x][particle.y].x;
         let new_y = particle.y + vector_field[particle.x][particle.y].y;
 

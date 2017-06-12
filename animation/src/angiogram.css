@@ -69,3 +69,22 @@ canvas {
   bottom: 0px;
   z-index: -2;
 }
+
+.home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
+  z-index: 10;
+}
+
+.message2 {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 200px;
+  color: #D9D9D9;
+  opacity: 0.8;
+}
