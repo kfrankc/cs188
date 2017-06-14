@@ -6,7 +6,7 @@ from skimage.color import rgb2gray
 import json
 from random import randint
 
-debug = True
+debug = False
 
 def generate_mask(img, r, c):
 	[rowMax, colMax] = img.shape
@@ -97,7 +97,7 @@ def search(search_list, img, r, c):
 def find_path(img_gray):
 	# return array of tuples, containing (in order) the (x, y) coordinates of the skeletonization path
 
-	path_list = []
+	path = []
 	search_list = []
 
 	# start at (rowMax, 0)
@@ -108,18 +108,18 @@ def find_path(img_gray):
 	for r in xrange(rowMax-2, 1, -1):
 		for c in xrange(2, colMax-2, 1):
 			if img_gray[r][c] == 1:
-				path_list.append((r, c))
+				path.append((r, c))
 				# check neighbors for next white pixel
 				if debug:
 					print "inside find_path double for loop: r: %i, c: %i" %(r, c)
-				path_list = path_list + search(search_list, img_gray, r, c)
+				path = path + search(search_list, img_gray, r, c)
 				fin = True
 				break
 		if (fin):
 			break
-	return [path_list, img_gray]
+	return [path, img_gray]
 
-skel = imread('find_path_test_img/skel3.png')
+skel = imread('find_path_test_img/8.png')
 # greyscale the image
 img_gray = rgb2gray(skel)
 path_list = []
