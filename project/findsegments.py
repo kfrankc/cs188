@@ -105,8 +105,8 @@ def search(seg, img, queue, r, c):
 
 	# stopping condition: if pixel_matrix is None; return
 	if pixel_matrix is None:
-		# if debug:
-		print "Reach stopping condition in search b/c pixel_matrix is None"
+		if debug:
+			print "Reach stopping condition in search b/c pixel_matrix is None"
 		return
 
 	[new_r, new_c, forked] = next_pixel(pixel_matrix, seg, queue, r, c)
@@ -182,50 +182,52 @@ def find_path(img, segments, roots, queue, seg_counter):
 		return [-1, seg_counter]
 
 # MAIN SCRIPT 
+seg_arrays = []
+for i in xrange(1, 25, 1): 
+	skel = imread('find_path_test_img/' + str(i) + '.png')
+	# greyscale the image
+	img_gray = rgb2gray(skel)
 
-skel = imread('find_path_test_img/11.png')
-# greyscale the image
-img_gray = rgb2gray(skel)
+	# array of Segment objects
+	segments = {}
+	roots = []
+	path_exist = True
+	seg_counter = 1
+	queue = deque()
+	while path_exist:
+		[rc, seg_counter] = find_path(img_gray, segments, roots, queue, seg_counter)
+		if debug:
+			print "returned rc: %i, seg_counter: %i" %(rc, seg_counter)
+		if (rc == -1):
+			queue = deque()
+		elif (rc == 0):
+			path_exist = False
 
-# array of Segment objects
-segments = {}
-roots = []
-path_exist = True
-seg_counter = 1
-queue = deque()
-while path_exist:
-	[rc, seg_counter] = find_path(img_gray, segments, roots, queue, seg_counter)
-	if debug:
-		print "returned rc: %i, seg_counter: %i" %(rc, seg_counter)
-	if (rc == -1):
-		queue = deque()
-	elif (rc == 0):
-		path_exist = False
+	fig = plt.figure(frameon=False)
+	plt.imshow(img_gray, interpolation='nearest')
+	plt.pause(0)
+	plt.draw()
 
-fig = plt.figure(frameon=False)
-plt.imshow(img_gray, interpolation='nearest')
-plt.pause(0)
-plt.draw()
+	# Save as json
+	seg_array = []
+	# if debug:
+	# print "length of segments dict: %i" %(len(segments))
+	# print "length of root list: %i" %(len(roots))
 
-# Save as json
-seg_array = []
-# if debug:
-print "length of segments dict: %i" %(len(segments))
-print "length of root list: %i" %(len(roots))
-for seg_id, segment in segments.iteritems():
-	seg_array.append(segment.path)
+	for seg_id, segment in segments.iteritems():
+		seg_list.append(segment.path)
+	seg_arrays.append(seg_array)
 
+	im = rgb2gray(skel)
+
+	# # visualize list on top of original file
+	# I = np.dstack([im, im, im])
+	# for seg_id, segment in segments.iteritems():
+	# 	color = [randint(0,1), randint(0,1), randint(0,1)]
+	# 	for tup in segment.path:
+	# 		I[tup[0], tup[1], :] = color
+	# plt.imshow(I, interpolation='nearest')
+	# plt.pause(0)
+	# plt.draw()
 with open('test.json', 'wb') as outfile:
 	json.dump(seg_array, outfile)
-
-im = rgb2gray(skel)
-
-# visualize list on top of original file
-I = np.dstack([im, im, im])
-for seg_id, segment in segments.iteritems():
-	color = [randint(0,1), randint(0,1), randint(0,1)]
-	for tup in segment.path:
-		I[tup[0], tup[1], :] = color
-plt.imshow(I, interpolation='nearest')
-plt.pause(0)
-plt.draw()
