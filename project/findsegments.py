@@ -8,6 +8,7 @@ import json
 from random import randint
 
 from segment import Segment
+from tools import euclidean_dist, mask_off, get_new_endpt_dict, get_endpt_dict, endpt_compare, reverse_path, change_orientation, check_direction
 
 # set to True for all debug statements to print
 debug = False
@@ -59,41 +60,6 @@ def next_pixel(pixel_matrix, seg, queue, row, col):
  	else:
  		return [row, col, False]
 
-    #  ```````````::hdydmmyosys/.``````````````     
-    #  ````````-odNNNhhhymNNNNNMNh:````````````     
-    #  ``````odmy:.``   `-+hNNNNMMMNs.`````````     
-    #  ````hdNy.            -+ymNMNMMm+````````     
-    #  ```+Nh-                `/mNMNMMMh.``````     
-    #  `-dMN-`                 .dNNNNMMMy``````     
-    #  `oMMs.`           ``.   `+dNMNMMMm``````     
-    #  `yMh-+oso.        -:+os+---sNNNMMN:`````     
-    #  `od:so+ohs+-  `/ydmNNNNMNmy./shNNMdd.```     
-    # `sdNMMMNMMMMMNNNNNNNNNddNMmmysyshNmmy````     
-    #  hNMMMNMMMMMMh/sMMNNNNmmmNm+-`+my/so.````     
-    #  `/NMMMMMMMMy`  /mMMNNNNmm.   .+/`.`.````     
-    #  ``+NMMMMMNy`    `:oyhydy.   `.-`. -`````     
-    #  ``::yyoo/..`    .`         `.-.:.:d+````     
-    #  ``-:`    -+hoo+o+/`       ``.:yooNmhh```     
-    #  ```+.```.-:odysso+:.`     ``.:NNMMMhy```     
-    #  ```.+...-sd+:--/+++h+` ``...:yNMMMMms```     
-    #  ````oh/:hdho:--``.:+-```..-:sNMMMMNMd:``     
-    #  ````-y/:::+syhdhs/-` ``..-+sNNNMMMMd+s:`     
-    #  `````:+-/:-:/:/.`  `````./smNdNMMMMmy.-`     
-    #  ``````.+os////:+/...-/yhs/``y`/mNMd`-o+`     
-    #  ````````:hmmNMMMMNNNMNy-````/+.ssy+:+-``     
-    #  ``````````-oydmmmmds+-``````````````````
-def mask_off(img, r, c):
-	img[r-1][c-1] = 0
-	img[r-1][c] = 0
-	img[r-1][c+1] = 0
-	img[r][c-1] = 0
-	img[r][c] = 0
-	img[r][c+1] = 0
-	img[r+1][c-1] = 0
-	img[r+1][c] = 0
-	img[r+1][c+1] = 0
-	return img
-
 def search(seg, img, queue, r, c):
 	[rowMax, colMax] = img.shape
 	forked = False
@@ -125,7 +91,6 @@ def search(seg, img, queue, r, c):
 		print "seg length after add_to_path: %i" %(len(seg.path))
 	return search(seg, img, queue, new_r, new_c)
 
-
 def find_path(img, segments, roots, queue, seg_counter):
 	# add Segments to segments list 
 	# return 1 if successfully added Segment object to segments
@@ -146,8 +111,6 @@ def find_path(img, segments, roots, queue, seg_counter):
 					seg.add_to_path(r, c)
 					if debug:
 						print "seg_counter: %i" %(seg_counter)
-					# check neighbors for next white pixel
-					if debug:
 						print "inside find_path double for loop: r: %i, c: %i" %(r, c)
 					# recursively add to seg until complete, erase paths from image
 					search(seg, img, queue, r, c)
@@ -176,17 +139,54 @@ def find_path(img, segments, roots, queue, seg_counter):
 
 			# add children back to parent seg
 			segments[fork["parent"]].add_to_children(seg)
+			# add children's first coords to parent
+			segments[fork["parent"]].add_to_path(r, c)
 			# add current seg to segments dict
 			segments[seg_counter] = seg
 			seg_counter = seg_counter + 1
 		return [-1, seg_counter]
 
+def mat_nonimplication(cur_frame, prev_frame):
+	[rowMax, colMax] = cur_frame.shape
+	ret_frame = np.ones((rowMax, colMax))
+	for r in xrange(rowMax):
+		for c in xrange(colMax):
+			if cur_frame[r][c] == 1 and prev_frame[r][c] == 0:
+				print "point: (%i, %i)" %(r, c)
+				ret_frame[r][c] = 1
+			else:
+				ret_frame[r][c] = 0
+	return ret_frame
+
 # MAIN SCRIPT 
+
 seg_arrays = []
-for i in xrange(1, 25, 1): 
+prev_frame = None
+disp_vessels = False
+for i in xrange(8, 9, 1):
+	print "frame: %i" %(i)
 	skel = imread('find_path_test_img/' + str(i) + '.png')
 	# greyscale the image
-	img_gray = rgb2gray(skel)
+	cur_frame = rgb2gray(skel)
+
+	# perform abjunction (cite: https://www.wikiwand.com/en/Material_nonimplication)
+	if (disp_vessels):
+		print "got here"
+		ret_frame = mat_nonimplication(cur_frame, prev_frame)
+		cur_frame = np.copy(ret_frame)
+
+	if prev_frame is not None:
+		fig, ax = plt.subplots(1, 2, figsize=(10, 8))
+		ax[0].imshow(cur_frame, cmap=plt.cm.bone)
+		ax[0].set_title('Return Frame')
+		ax[0].axis('image')
+		ax[1].imshow(prev_frame, cmap=plt.cm.bone)
+		ax[1].set_title('Prev Frame')
+		ax[1].axis('image')
+		plt.pause(0)
+		plt.draw()
+
+	prev_frame = np.copy(cur_frame)
 
 	# array of Segment objects
 	segments = {}
@@ -195,39 +195,49 @@ for i in xrange(1, 25, 1):
 	seg_counter = 1
 	queue = deque()
 	while path_exist:
-		[rc, seg_counter] = find_path(img_gray, segments, roots, queue, seg_counter)
+		[rc, seg_counter] = find_path(cur_frame, segments, roots, queue, seg_counter)
+		if (rc == 1):
+			disp_vessels = True
 		if debug:
 			print "returned rc: %i, seg_counter: %i" %(rc, seg_counter)
 		if (rc == -1):
+			# begin a new path, so re-initialize queue for BFS
 			queue = deque()
+			# check that path is pointing in the right direction
+			# only want to check direction after adding initial segment (change later, since this approach is not robust)
+			if (len(roots) > 1):
+				seg = segments[roots[-1]]
+				print "old root key: %i" %(roots[-1])
+				check_direction(segments, roots, seg)
 		elif (rc == 0):
 			path_exist = False
-
-	fig = plt.figure(frameon=False)
-	plt.imshow(img_gray, interpolation='nearest')
-	plt.pause(0)
-	plt.draw()
 
 	# Save as json
 	seg_array = []
 	# if debug:
-	# print "length of segments dict: %i" %(len(segments))
-	# print "length of root list: %i" %(len(roots))
+	print "length of segments dict: %i" %(len(segments))
+	print "length of root list: %i" %(len(roots))
 
 	for seg_id, segment in segments.iteritems():
-		seg_list.append(segment.path)
+		seg_array.append(segment.path)
 	seg_arrays.append(seg_array)
 
 	im = rgb2gray(skel)
 
-	# # visualize list on top of original file
-	# I = np.dstack([im, im, im])
-	# for seg_id, segment in segments.iteritems():
-	# 	color = [randint(0,1), randint(0,1), randint(0,1)]
-	# 	for tup in segment.path:
-	# 		I[tup[0], tup[1], :] = color
-	# plt.imshow(I, interpolation='nearest')
-	# plt.pause(0)
-	# plt.draw()
+	# visualize list on top of original file
+	fig = plt.figure(frameon=False)
+	ax = plt.Axes(fig, [0., 0., 1., 1.])
+	fig.set_size_inches(5.12, 5.12)
+	ax.set_axis_off()
+	fig.add_axes(ax)
+	I = np.dstack([im, im, im])
+	for seg_id, segment in segments.iteritems():
+		color = [randint(0,1), randint(0,1), randint(0,1)]
+		for tup in segment.path:
+			I[tup[0], tup[1], :] = color
+	plt.imshow(I, interpolation='nearest')
+	plt.pause(0)
+	plt.draw()
+
 with open('test.json', 'wb') as outfile:
-	json.dump(seg_array, outfile)
+	json.dump(seg_arrays, outfile)
